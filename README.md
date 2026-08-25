@@ -1,8 +1,8 @@
 # upvote-outreaach-system
 
-Contact pool: Product Hunt makers → LinkedIn outreach (Next.js, Prisma/Postgres, Unipile, Gemini, Context.dev).
+Launchlist: Product Hunt makers → LinkedIn outreach (Next.js, Prisma/Postgres, Unipile, Gemini, Context.dev).
 
-Working hours, invite spacing, and daily caps use **UTC**.
+Working hours, invite spacing, and daily caps use the operator’s local timezone.
 
 ## Local setup
 

@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MessageComposer } from "@/components/MessageComposer";
+import { MessageComposer, FormattedNotePreview } from "@/components/MessageComposer";
 import { IconLabel } from "@/components/icons";
 import { fillTemplate } from "@/lib/template";
 
@@ -21,6 +21,7 @@ export function CampaignMessageEditor({
 }) {
   const router = useRouter();
   const [value, setValue] = useState(template);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
   const [err, setErr] = useState<string | null>(null);
@@ -60,9 +61,25 @@ export function CampaignMessageEditor({
         <button className="btn" disabled={busy || over} onClick={save} type="button">
           <IconLabel name="save">{busy ? "Saving…" : "Save note"}</IconLabel>
         </button>
+        <button
+          className="btn secondary"
+          aria-expanded={previewOpen}
+          onClick={() => setPreviewOpen((open) => !open)}
+          type="button"
+        >
+          <IconLabel name="preview">{previewOpen ? "Hide preview" : "Preview"}</IconLabel>
+        </button>
         {err ? <p className="warn-text">{err}</p> : null}
         {msg ? <p className="muted">{msg}</p> : null}
       </div>
+      {previewOpen ? (
+        <FormattedNotePreview
+          kind={kind}
+          value={value}
+          previewName={previewName}
+          previewCompany={previewCompany}
+        />
+      ) : null}
     </section>
   );
 }

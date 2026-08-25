@@ -25,7 +25,7 @@ export function CampaignActions({
       setMsg(data.error || "Could not update campaign");
       return;
     }
-    setMsg(path.endsWith("/pause") ? "Paused. The worker will not send from this campaign." : "The worker will send one invite at a time, with a random gap.");
+    setMsg(path.endsWith("/pause") ? "Paused. The worker will not send from this campaign." : "The worker will send one invite at a time during working hours.");
     router.refresh();
   }
 

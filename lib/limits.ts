@@ -6,7 +6,7 @@
  * Unipile does not enforce them; LinkedIn returns 429/500/422 cannot_resend_yet.
  */
 
-import { utcParts } from "./time";
+import { resolveTimeZone, zonedParts, zonedWallTimeToUtc } from "./time";
 
 export const UNIPILE_LINKEDIN = {
   paid: {
@@ -88,7 +88,7 @@ export function clampMessageDailyCap(value: number) {
 
 export function clampJitter(minSec: number, maxSec: number) {
   const min = Math.max(120, Math.floor(minSec));
-  const max = Math.max(min + 60, Math.floor(maxSec));
+  const max = Math.max(min, Math.floor(maxSec));
   return { minJitterSec: min, maxJitterSec: max };
 }
 
@@ -105,16 +105,28 @@ export function isWorkingTime(settings: LimitSettings, date = new Date()) {
     .split(",")
     .map((value) => Number(value.trim()))
     .filter((value) => Number.isFinite(value));
-  const { weekday, hour } = utcParts(date);
+  const { weekday, hour } = zonedParts(date, settings.timezone);
   if (!days.includes(weekday)) return false;
   return hour >= settings.workStartHour && hour < settings.workEndHour;
 }
 
 export function nextWorkingMoment(settings: LimitSettings, from = new Date()) {
-  const cursor = new Date(from.getTime());
-  for (let i = 0; i < 14 * 24; i++) {
-    if (isWorkingTime(settings, cursor)) return cursor;
-    cursor.setUTCMinutes(cursor.getUTCMinutes() + 15);
+  if (isWorkingTime(settings, from)) return new Date(from.getTime());
+  const tz = resolveTimeZone(settings.timezone);
+  const days = settings.workDays
+    .split(",")
+    .map((value) => Number(value.trim()))
+    .filter((value) => Number.isFinite(value));
+
+  let probe = new Date(from.getTime());
+  for (let i = 0; i < 14; i++) {
+    const parts = zonedParts(probe, tz);
+    if (days.includes(parts.weekday)) {
+      const start = zonedWallTimeToUtc(parts.year, parts.month, parts.day, settings.workStartHour, 0, tz);
+      if (start.getTime() >= from.getTime() && isWorkingTime(settings, start)) return start;
+    }
+    const noon = zonedWallTimeToUtc(parts.year, parts.month, parts.day, 12, 0, tz);
+    probe = new Date(noon.getTime() + 24 * 60 * 60 * 1000);
   }
   return new Date(from.getTime() + 24 * 60 * 60 * 1000);
 }

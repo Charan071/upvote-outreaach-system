@@ -24,7 +24,6 @@ export function MessageComposer({
   const fieldId = useId();
   const max = kind === "invite" ? (noteMax ?? 300) : 2000;
   const filled = fillTemplate(value, { firstName: previewName, company: previewCompany });
-  const preview = filled.slice(0, max);
   const copyError = kind === "invite" ? assertInviteCopy(value) : null;
   const over = filled.length > max;
   const presets = templatesForKind(kind);
@@ -86,10 +85,41 @@ export function MessageComposer({
           This is too long. LinkedIn would cut it mid-sentence. Shorten it before saving.
         </p>
       ) : null}
-      <div className="preview">
-        <p className="kicker">Preview for {previewName}</p>
-        <p className="review-body">{preview}</p>
-      </div>
+    </div>
+  );
+}
+
+export function FormattedNotePreview({
+  value,
+  previewName = "Alex",
+  previewCompany = "Acme",
+  kind = "invite",
+  noteMax,
+}: {
+  value: string;
+  previewName?: string;
+  previewCompany?: string;
+  kind?: "invite" | "message";
+  noteMax?: number;
+}) {
+  const max = kind === "invite" ? (noteMax ?? 300) : 2000;
+  const preview = fillTemplate(value, { firstName: previewName, company: previewCompany }).slice(0, max);
+  const chunks = preview.split(/(https?:\/\/[^\s]+)/g);
+
+  return (
+    <div className="preview">
+      <p className="kicker">Preview for {previewName}</p>
+      <p className="review-body">
+        {chunks.map((chunk, index) =>
+          /^https?:\/\//.test(chunk) ? (
+            <a key={index} href={chunk} target="_blank" rel="noreferrer">
+              {chunk}
+            </a>
+          ) : (
+            <span key={index}>{chunk}</span>
+          ),
+        )}
+      </p>
     </div>
   );
 }

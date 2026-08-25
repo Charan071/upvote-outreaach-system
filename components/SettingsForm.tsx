@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { IconLabel } from "@/components/icons";
 import {
   clampInviteDailyCap,
@@ -30,7 +30,7 @@ type FormState = {
 };
 
 function clampForm(next: FormState): FormState {
-  const jitter = clampJitter(next.minJitterSec || 120, next.maxJitterSec || 180);
+  const jitter = clampJitter(next.minJitterSec || 120, next.maxJitterSec || next.minJitterSec || 120);
   return {
     ...next,
     dailyCap: clampInviteDailyCap(next.accountTier, next.dailyCap || 1),
@@ -96,6 +96,11 @@ export function SettingsForm({
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
 
+  useEffect(() => {
+    const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    setForm((current) => (current.timezone === tz ? current : { ...current, timezone: tz }));
+  }, []);
+
   function patch(partial: Partial<FormState>) {
     setForm((current) => clampForm({ ...current, ...partial }));
   }
@@ -104,10 +109,14 @@ export function SettingsForm({
     e.preventDefault();
     setBusy(true);
     setMsg(null);
+    const payload = {
+      ...form,
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    };
     const res = await fetch("/api/settings", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(form),
+      body: JSON.stringify(payload),
     });
     const data = await res.json();
     setBusy(false);
@@ -116,8 +125,9 @@ export function SettingsForm({
       setForm(
         clampForm({
           ...form,
-          paused: data.settings.paused,
-          accountTier: data.settings.accountTier,
+          timezone: data.settings.timezone ?? form.timezone,
+          workStartHour: data.settings.workStartHour,
+          workEndHour: data.settings.workEndHour,
           dailyCap: data.settings.dailyCap,
           weeklyInviteCap: data.settings.weeklyInviteCap,
           messageDailyCap: data.settings.messageDailyCap,
@@ -208,14 +218,9 @@ export function SettingsForm({
         </label>
       </div>
 
-      <label>
-        Timezone
-        <input value="UTC" readOnly />
-        <span className="muted cap-remaining">The worker uses UTC for work hours, daily caps, and invite spacing.</span>
-      </label>
       <div className="row">
         <label>
-          Work start hour (UTC)
+          Work start hour
           <input
             type="number"
             min={0}
@@ -225,7 +230,7 @@ export function SettingsForm({
           />
         </label>
         <label>
-          Work end hour (UTC)
+          Work end hour
           <input
             type="number"
             min={1}
@@ -235,6 +240,10 @@ export function SettingsForm({
           />
         </label>
       </div>
+      <p className="muted field-hint">
+        Sends run between these hours in your local time.
+      </p>
+
       <div className="row">
         <label>
           Min gap (seconds)
@@ -250,7 +259,7 @@ export function SettingsForm({
           Max gap (seconds)
           <input
             type="number"
-            min={180}
+            min={120}
             max={10800}
             value={form.maxJitterSec}
             onChange={(e) => patch({ maxJitterSec: Number(e.target.value) })}
@@ -258,8 +267,8 @@ export function SettingsForm({
         </label>
       </div>
       <p className="muted">
-        The background worker spaces LinkedIn actions randomly during working hours. Defaults are 8–25 minutes
-        between sends and profile lookups. Paid accounts cannot exceed 80 invites/day and 200/week.
+        The worker sends one LinkedIn action at a time during these hours, using the gap above. Paid accounts cannot
+        exceed 80 invites/day and 200/week.
       </p>
       <button className="btn" disabled={busy} type="submit">
         <IconLabel name="save">{busy ? "Saving…" : "Save"}</IconLabel>

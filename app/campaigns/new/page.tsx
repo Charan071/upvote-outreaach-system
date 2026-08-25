@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { MessageComposer } from "@/components/MessageComposer";
+import { FormattedNotePreview, MessageComposer } from "@/components/MessageComposer";
 import { IconLabel } from "@/components/icons";
 
 export default function NewCampaignPage() {
@@ -12,6 +12,7 @@ export default function NewCampaignPage() {
   const [template, setTemplate] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [previewOpen, setPreviewOpen] = useState(false);
 
   useEffect(() => {
     fetch("/api/settings")
@@ -43,12 +44,12 @@ export default function NewCampaignPage() {
   const submitLabel = kind === "message" ? "Queue messages" : "Queue invites";
 
   return (
-    <form onSubmit={onSubmit} className="panel stack" style={{ maxWidth: 720 }}>
+    <form onSubmit={onSubmit} className="panel stack form-narrow">
       <p className="kicker">New campaign</p>
       <h1>{title}</h1>
       <p className="muted">
         One note for everyone in this campaign. The worker sends one {kind === "message" ? "message" : "invite"} at a
-        time during working hours, with a random gap between each.
+        time during working hours, with the gap set in Settings.
       </p>
       <label>
         Name <span className="muted">(optional)</span>
@@ -66,9 +67,20 @@ export default function NewCampaignPage() {
         </select>
       </label>
       <MessageComposer kind={kind} value={template} onChange={setTemplate} label="Note" />
-      <button className="btn" disabled={busy} type="submit">
-        <IconLabel name="send">{busy ? "Queueing…" : submitLabel}</IconLabel>
-      </button>
+      <div className="row">
+        <button className="btn" disabled={busy} type="submit">
+          <IconLabel name="send">{busy ? "Queueing…" : submitLabel}</IconLabel>
+        </button>
+        <button
+          className="btn secondary"
+          aria-expanded={previewOpen}
+          onClick={() => setPreviewOpen((open) => !open)}
+          type="button"
+        >
+          <IconLabel name="preview">{previewOpen ? "Hide preview" : "Preview"}</IconLabel>
+        </button>
+      </div>
+      {previewOpen ? <FormattedNotePreview kind={kind} value={template} /> : null}
       {error ? <p className="warn-text">{error}</p> : null}
     </form>
   );

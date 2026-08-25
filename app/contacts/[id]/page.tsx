@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { RetryEnrichButton } from "@/components/RetryEnrichButton";
 import { Icon } from "@/components/icons";
-import { PageHeader, Stat, StatusBadge } from "@/components/ui";
+import { PageHeader, StatusBadge } from "@/components/ui";
 import { contactStatus } from "@/lib/status";
+import { LocalTime } from "@/components/LocalTime";
 
 export const dynamic = "force-dynamic";
 
@@ -26,9 +27,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
         title={contact.firstName ? `${contact.firstName} ${contact.lastName ?? ""}` : contact.linkedinSlug}
         actions={contact.enrichStatus === "failed" ? <RetryEnrichButton id={contact.id} /> : null}
       />
-      <div className="stats stats-3">
-        <Stat value={<StatusBadge status={contactStatus(contact)} />} label="Status" icon="user" />
-      </div>
+      <div className="detail-grid">
       <section className="panel stack">
         <p>
           <a href={contact.linkedinUrl} target="_blank" rel="noreferrer">
@@ -45,7 +44,9 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
         ) : null}
         {contact.contextSnippet ? <p className="muted">{contact.contextSnippet}</p> : null}
         {contact.enrichError ? <p className="warn-text">{contact.enrichError}</p> : null}
+        <p><StatusBadge status={contactStatus(contact)} /></p>
       </section>
+      <div>
 
       <h2>Campaign history</h2>
       {contact.campaignContacts.length === 0 ? (
@@ -54,7 +55,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
         <div className="table-wrap">
           <table>
             <thead>
-              <tr><th>Campaign</th><th>Message</th><th>Status</th></tr>
+              <tr><th>Campaign</th><th>Message</th><th>Status</th><th>Send at</th></tr>
             </thead>
             <tbody>
               {contact.campaignContacts.map((row) => (
@@ -62,6 +63,15 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
                   <td><Link href={`/campaigns/${row.campaignId}`}>{row.campaign.name}</Link></td>
                   <td className="queued-note-locked">{row.renderedMessage}</td>
                   <td><StatusBadge status={row.sendStatus} /></td>
+                  <td className="muted">
+                    {row.sendStatus === "sent" && row.sentAt ? (
+                      <LocalTime at={row.sentAt} mode="datetime" />
+                    ) : row.sendStatus === "queued" || row.sendStatus === "sending" ? (
+                      <LocalTime at={row.runAfter} />
+                    ) : (
+                      "—"
+                    )}
+                  </td>
                 </tr>
               ))}
             </tbody>
@@ -84,6 +94,8 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
           ))}
         </div>
       )}
+      </div>
+      </div>
     </>
   );
 }

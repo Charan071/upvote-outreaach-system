@@ -1,4 +1,5 @@
 import { prisma } from "./prisma";
+import type { Settings } from "@prisma/client";
 import { sendInvitation, startChat, isLinkedInLimitError, UnipileError } from "./unipile";
 import { enrichContact } from "./enrich";
 import { isDisconnectedStatus, recordLinkedInFailure, syncUnipileStatus } from "./health";
@@ -16,9 +17,9 @@ import {
   spreadSlots,
   type LimitSettings,
 } from "./limits";
-import { APP_TIMEZONE, startOfUtcDay } from "./time";
+import { resolveTimeZone, startOfZonedDay } from "./time";
 
-export async function getSettings() {
+export async function getSettings(): Promise<Settings> {
   const existing = await prisma.settings.findUnique({ where: { id: "default" } });
   const row =
     existing ??
@@ -33,16 +34,16 @@ export async function getSettings() {
     }));
 
   const now = new Date();
-  const today = startOfUtcDay(now);
+  const timezone = resolveTimeZone(row.timezone);
+  const today = startOfZonedDay(now, timezone);
   const weekStart = row.weekStart ?? now;
   const weekElapsed = now.getTime() - weekStart.getTime() >= 7 * 24 * 60 * 60 * 1000;
   const dayRollover = !row.windowStart || row.windowStart < today;
   const oldJitter = row.minJitterSec === 45 && row.maxJitterSec === 120;
   const badWorkHours = row.workStartHour === 0 && row.workEndHour === 24;
-  const migrateToUtc = row.timezone !== APP_TIMEZONE;
 
-  if (dayRollover || weekElapsed || oldJitter || badWorkHours || migrateToUtc) {
-    return prisma.settings.update({
+  if (dayRollover || weekElapsed || oldJitter || badWorkHours) {
+    const updated = await prisma.settings.update({
       where: { id: "default" },
       data: {
         ...(dayRollover
@@ -60,19 +61,30 @@ export async function getSettings() {
           ? { minJitterSec: UNIPILE_LINKEDIN.minJitterSec, maxJitterSec: UNIPILE_LINKEDIN.maxJitterSec }
           : {}),
         ...(badWorkHours ? { workStartHour: 9, workEndHour: 18 } : {}),
-        ...(migrateToUtc ? { timezone: APP_TIMEZONE } : {}),
       },
     });
+    return snapNextAllowedAt(updated, now);
   }
 
-  return row;
+  return snapNextAllowedAt(row, now);
 }
 
-export function asLimitSettings(row: Awaited<ReturnType<typeof getSettings>>): LimitSettings {
+async function snapNextAllowedAt(row: Settings, now: Date) {
+  const limits = asLimitSettings(row);
+  if (isWorkingTime(limits, row.nextAllowedAt)) return row;
+  const snapped = nextWorkingMoment(limits, row.nextAllowedAt > now ? row.nextAllowedAt : now);
+  if (snapped.getTime() === row.nextAllowedAt.getTime()) return row;
+  return prisma.settings.update({
+    where: { id: "default" },
+    data: { nextAllowedAt: snapped },
+  });
+}
+
+export function asLimitSettings(row: Settings): LimitSettings {
   const jitter = clampJitter(row.minJitterSec, row.maxJitterSec);
   return {
     accountTier: row.accountTier === "free" ? "free" : "paid",
-    timezone: APP_TIMEZONE,
+    timezone: resolveTimeZone(row.timezone),
     workStartHour: row.workStartHour,
     workEndHour: row.workEndHour,
     workDays: row.workDays || "1,2,3,4,5",
@@ -134,8 +146,27 @@ export async function spreadQueuedJobs(campaignId?: string) {
   return queued.length;
 }
 
+export async function respreadQueueFromNow() {
+  await prisma.settings.update({
+    where: { id: "default" },
+    data: { nextAllowedAt: new Date() },
+  });
+  return spreadQueuedJobs();
+}
+
+export async function repairQueueIfNeeded() {
+  const settings = asLimitSettings(await getSettings());
+  const queued = await prisma.campaignContact.findMany({
+    where: { sendStatus: "queued", campaign: { status: "running" } },
+    select: { runAfter: true },
+  });
+  if (!queued.some((job) => !isWorkingTime(settings, job.runAfter))) return 0;
+  return spreadQueuedJobs();
+}
+
 export async function tickQueue() {
   await syncUnipileStatus();
+  await repairQueueIfNeeded();
   const raw = await getSettings();
   const settings = asLimitSettings(raw);
   const now = new Date();
@@ -278,6 +309,7 @@ export async function tickQueue() {
   try {
     await enrichContact(pending.id, { countVisit: true });
     const nextAllowedAt = await markCooldown();
+    await spreadQueuedJobs();
     return { processed: 1, reason: "enriched" as const, contactId: pending.id, nextAllowedAt };
   } catch (error) {
     return {

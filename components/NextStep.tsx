@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Icon } from "@/components/icons";
-import { formatUtcHourRange } from "@/lib/time";
+import { LocalHourRange, LocalTime } from "@/components/LocalTime";
+import { formatJitterPhrase } from "@/lib/time";
 
 export function NextStep({
   pendingCount,
@@ -8,15 +9,26 @@ export function NextStep({
   queuedCount,
   workStartHour,
   workEndHour,
+  timeZone,
+  minJitterSec,
+  maxJitterSec,
+  nextSendAt,
+  nextSendName,
 }: {
   pendingCount: number;
   readyCount: number;
   queuedCount: number;
   workStartHour: number;
   workEndHour: number;
+  timeZone?: string;
+  minJitterSec: number;
+  maxJitterSec: number;
+  nextSendAt?: Date | string | null;
+  nextSendName?: string | null;
 }) {
-  const hours = formatUtcHourRange(workStartHour, workEndHour);
   const step = pendingCount > 0 ? 2 : queuedCount > 0 || readyCount > 0 ? 3 : 1;
+  const hours = <LocalHourRange startHour={workStartHour} endHour={workEndHour} timeZone={timeZone} />;
+  const gap = formatJitterPhrase(minJitterSec, maxJitterSec);
 
   return (
     <section className="next-step">
@@ -37,7 +49,7 @@ export function NextStep({
             <p className="kicker">Next</p>
             <h2>Looking up {pendingCount} name{pendingCount === 1 ? "" : "s"}</h2>
             <p className="muted">
-              The worker visits one LinkedIn profile at a time, with a random gap. Invites wait until {hours}.
+              The worker visits one LinkedIn profile at a time, with {gap}. Invites wait until {hours}.
             </p>
           </div>
         </div>
@@ -47,8 +59,17 @@ export function NextStep({
             <p className="kicker">Next</p>
             <h2>Sending {queuedCount} invite{queuedCount === 1 ? "" : "s"}</h2>
             <p className="muted">
-              The worker sends one connection request at a time during {hours}, with a random gap so they are not
-              sent in a burst.
+              {nextSendAt ? (
+                <>
+                  Next send <LocalTime at={nextSendAt} />
+                  {nextSendName ? ` · ${nextSendName}` : ""}. The rest follow one at a time during {hours}, with {gap}.
+                </>
+              ) : (
+                <>
+                  The worker sends one connection request at a time during {hours}, with {gap} so they are not sent in
+                  a burst.
+                </>
+              )}
             </p>
           </div>
           <Link className="btn secondary" href="/campaigns">

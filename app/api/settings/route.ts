@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getSettings } from "@/lib/queue";
+import { getSettings, respreadQueueFromNow } from "@/lib/queue";
 import { assertInviteCopy, defaultTemplate } from "@/lib/template";
+import { resolveTimeZone } from "@/lib/time";
 import {
   clampInviteDailyCap,
   clampJitter,
@@ -31,7 +32,7 @@ export async function PUT(req: Request) {
     paused: Boolean(body?.paused),
     pausedReason: body?.paused ? undefined : null,
     accountTier,
-    timezone: "UTC",
+    timezone: resolveTimeZone(body?.timezone),
     workStartHour,
     workEndHour,
     workDays: String(body?.workDays || "1,2,3,4,5"),
@@ -42,6 +43,7 @@ export async function PUT(req: Request) {
     ...(template ? { defaultTemplate: template } : {}),
     minJitterSec: jitter.minJitterSec,
     maxJitterSec: jitter.maxJitterSec,
+    nextAllowedAt: new Date(),
   };
 
   const settings = await prisma.settings.upsert({
@@ -49,5 +51,6 @@ export async function PUT(req: Request) {
     update: data,
     create: { id: "default", defaultTemplate: template || defaultTemplate(), ...data },
   });
+  await respreadQueueFromNow();
   return NextResponse.json({ settings });
 }

@@ -1,22 +1,21 @@
 import "./globals.css";
-import { IBM_Plex_Sans } from "next/font/google";
 import { AppNav } from "@/components/AppNav";
-
-const plex = IBM_Plex_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600"],
-  display: "swap",
-});
+import { APP_NAME, APP_TAGLINE, THEME_KEY } from "@/lib/brand";
 
 export const metadata = {
-  title: "Contact pool",
-  description: "Reusable LinkedIn audience and campaign queue",
+  title: APP_NAME,
+  description: APP_TAGLINE,
 };
+
+const themeBoot = `try{var t=localStorage.getItem(${JSON.stringify(THEME_KEY)});if(t!=="light"&&t!=="dark")t="dark";document.documentElement.setAttribute("data-theme",t);}catch(e){document.documentElement.setAttribute("data-theme","dark");}`;
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
-      <body className={plex.className}>
+    <html lang="en" data-theme="dark" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeBoot }} />
+      </head>
+      <body>
         <div className="shell">
           <AppNav />
           <main>{children}</main>

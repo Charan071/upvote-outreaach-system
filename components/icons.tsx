@@ -50,6 +50,24 @@ const icons = {
   filter: (
     <path d="M10 18h4v-2h-4v2zM3 6v2h18V6H3zm3 7h12v-2H6v2z" />
   ),
+  chevronLeft: <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />,
+  chevronRight: <path d="M10 6 8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z" />,
+  sun: (
+    <>
+      <circle cx="12" cy="12" r="4" />
+      <path
+        d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.75"
+        strokeLinecap="round"
+      />
+    </>
+  ),
+  moon: <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />,
+  preview: (
+    <path d="M12 6C7 6 2.73 9.11 1 14c1.73 4.89 6 8 11 8s9.27-3.11 11-8c-1.73-4.89-6-8-11-8zm0 13a5 5 0 1 1 0-10 5 5 0 0 1 0 10zm0-8a3 3 0 1 0 0 6 3 3 0 0 0 0-6z" />
+  ),
 } as const;
 
 export type IconName = keyof typeof icons;
@@ -73,6 +91,22 @@ export function Icon({
       focusable="false"
     >
       {icons[name]}
+    </svg>
+  );
+}
+
+export function BrandMark({ size = 28 }: { size?: number }) {
+  return (
+    <svg
+      className="brand-mark"
+      width={size}
+      height={size}
+      viewBox="0 0 32 32"
+      aria-hidden
+      focusable="false"
+    >
+      <rect className="brand-mark-bg" width="32" height="32" />
+      <path className="brand-mark-fg" d="M16 6.5 25 16h-5.25v9.5h-7.5V16H7L16 6.5z" />
     </svg>
   );
 }
