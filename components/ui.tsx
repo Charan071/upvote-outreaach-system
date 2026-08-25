@@ -61,7 +61,7 @@ export function StatusBadge({ status }: { status: string }) {
         ? "bad"
         : status === "pending" || status === "pending_review" || status === "queued" || status === "paused" || status === "draft"
           ? "warn"
-          : status === "invited" || status === "connected" || status === "messaged"
+          : status === "invited" || status === "connected" || status === "messaged" || status === "skipped"
             ? "accent"
             : "neutral";
   return <Badge tone={tone}>{statusLabel(status)}</Badge>;

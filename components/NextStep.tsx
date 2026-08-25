@@ -49,7 +49,8 @@ export function NextStep({
             <p className="kicker">Next</p>
             <h2>Looking up {pendingCount} name{pendingCount === 1 ? "" : "s"}</h2>
             <p className="muted">
-              The worker visits one LinkedIn profile at a time, with {gap}. Invites wait until {hours}.
+              The worker visits one LinkedIn profile at a time, with {gap}. Name lookups run anytime; invites
+              wait until {hours}.
             </p>
           </div>
         </div>

@@ -13,7 +13,24 @@ type UnipileProfile = {
   first_name?: string;
   last_name?: string;
   headline?: string;
+  network_distance?: string;
+  is_relationship?: boolean;
+  specifics?: {
+    network_distance?: string;
+    is_relationship?: boolean;
+  };
 };
+
+function stringField(value: unknown) {
+  return typeof value === "string" ? value : "";
+}
+
+function profileRelation(data: UnipileProfile) {
+  return {
+    networkDistance: stringField(data.network_distance) || stringField(data.specifics?.network_distance),
+    isRelationship: data.is_relationship === true || data.specifics?.is_relationship === true,
+  };
+}
 
 export class UnipileError extends Error {
   status: number;
@@ -115,12 +132,20 @@ export function isLinkedInLimitError(error: unknown) {
   );
 }
 
+export function isAlreadyConnectedError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  const type = error instanceof UnipileError ? error.type : "";
+  return /already.?connect|already.?relation|first_degree/i.test(`${type} ${message}`);
+}
+
 export async function getLinkedInProfile(slug: string): Promise<{
   providerId: string;
   publicIdentifier: string;
   firstName: string;
   lastName: string;
   headline: string;
+  networkDistance: string;
+  isRelationship: boolean;
 }> {
   const { accountId } = config();
   const data = (await unipileFetch(
@@ -133,12 +158,15 @@ export async function getLinkedInProfile(slug: string): Promise<{
     throw new Error("Unipile returned a profile without first_name or provider_id.");
   }
 
+  const relation = profileRelation(data);
   return {
     providerId,
     publicIdentifier: data.public_identifier ?? slug,
     firstName,
     lastName: (data.last_name ?? "").trim(),
     headline: (data.headline ?? "").trim(),
+    networkDistance: relation.networkDistance,
+    isRelationship: relation.isRelationship,
   };
 }
 

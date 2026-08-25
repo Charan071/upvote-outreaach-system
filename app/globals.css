@@ -202,8 +202,12 @@ aside.collapsed {
 }
 .brand:hover { color: var(--aside-ink); }
 .brand-mark { display: block; flex-shrink: 0; }
-.brand-mark-bg { fill: var(--accent); }
-.brand-mark-fg { fill: #ffffff; }
+.brand-mark-fg {
+  fill: var(--bg);
+  stroke: var(--accent);
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+}
 aside.collapsed .brand {
   justify-content: center;
   gap: 0;

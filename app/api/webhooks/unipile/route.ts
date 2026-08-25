@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { classifyReply } from "@/lib/gemini";
 import { applyUnipileStatus } from "@/lib/health";
 import { isOurUnipileAccount } from "@/lib/unipile";
+import { markConnectedAndSkipInvites } from "@/lib/connected";
 
 export const runtime = "nodejs";
 
@@ -56,10 +57,7 @@ export async function POST(req: Request) {
       },
     });
     if (contact) {
-      await prisma.contact.update({
-        where: { id: contact.id },
-        data: { outreachStatus: "connected" },
-      });
+      await markConnectedAndSkipInvites(contact.id);
     }
     return NextResponse.json({ ok: true, event, matched: Boolean(contact) });
   }
@@ -107,8 +105,9 @@ export async function POST(req: Request) {
     }
     await prisma.contact.update({
       where: { id: contact.id },
-      data: { poolStatus: "pending_review", outreachStatus: "connected" },
+      data: { poolStatus: "pending_review" },
     });
+    await markConnectedAndSkipInvites(contact.id);
     return NextResponse.json({ ok: true, event, matched: true });
   }
 

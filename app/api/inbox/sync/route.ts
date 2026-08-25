@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { classifyReply } from "@/lib/gemini";
 import { listChatMessages, listChats } from "@/lib/unipile";
+import { markConnectedAndSkipInvites } from "@/lib/connected";
 
 type Chat = {
   id?: string;
@@ -76,8 +77,9 @@ export async function POST() {
         });
         await prisma.contact.update({
           where: { id: contact.id },
-          data: { poolStatus: "pending_review", outreachStatus: "connected" },
+          data: { poolStatus: "pending_review" },
         });
+        await markConnectedAndSkipInvites(contact.id);
         imported += 1;
       }
     }

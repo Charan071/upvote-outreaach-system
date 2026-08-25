@@ -24,6 +24,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
 
   const sent = campaign.contacts.filter((c) => c.sendStatus === "sent").length;
   const failed = campaign.contacts.filter((c) => c.sendStatus === "failed").length;
+  const skipped = campaign.contacts.filter((c) => c.sendStatus === "skipped").length;
   const queuedRows = campaign.contacts.filter((c) => c.sendStatus === "queued" || c.sendStatus === "sending");
   const queued = queuedRows.length;
   const kind = campaign.kind === "message" ? "message" : "invite";
@@ -40,7 +41,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
       <p className="campaign-meta">
         <StatusBadge status={campaign.status} />
         <span>
-          {sent} sent · {queued} queued · {failed} failed · {campaign.contacts.length} total
+          {sent} sent · {queued} queued · {skipped} skipped · {failed} failed · {campaign.contacts.length} total
         </span>
       </p>
       {campaign.status === "running" && queued > 0 ? (

@@ -133,8 +133,10 @@ export function nextWorkingMoment(settings: LimitSettings, from = new Date()) {
 
 export function reasonBlocked(settings: LimitSettings, kind: "invite" | "message" | "profile", now = new Date()) {
   if (settings.paused) return "paused" as const;
-  if (now < settings.nextAllowedAt) return "jitter" as const;
-  if (kind !== "profile" && !isWorkingTime(settings, now)) return "outside_hours" as const;
+  if (kind !== "profile") {
+    if (now < settings.nextAllowedAt) return "jitter" as const;
+    if (!isWorkingTime(settings, now)) return "outside_hours" as const;
+  }
   if (kind === "invite") {
     if (settings.invitesToday >= settings.dailyCap) return "daily_cap" as const;
     if (settings.invitesThisWeek >= settings.weeklyInviteCap) return "weekly_cap" as const;
