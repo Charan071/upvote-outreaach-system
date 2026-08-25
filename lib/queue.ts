@@ -1,8 +1,15 @@
 import { prisma } from "./prisma";
 import type { Settings } from "@prisma/client";
-import { sendInvitation, startChat, isLinkedInLimitError, UnipileError } from "./unipile";
+import {
+  sendInvitation,
+  startChat,
+  isLinkedInLimitError,
+  isAlreadyConnectedError,
+  UnipileError,
+} from "./unipile";
 import { enrichContact } from "./enrich";
 import { isDisconnectedStatus, recordLinkedInFailure, syncUnipileStatus } from "./health";
+import { ALREADY_CONNECTED_ERROR, shouldSkipInvite } from "./connected";
 import {
   UNIPILE_LINKEDIN,
   clampInviteDailyCap,
@@ -114,6 +121,20 @@ async function markCooldown() {
   return nextAllowedAt;
 }
 
+async function markProfileCooldown() {
+  await prisma.settings.update({
+    where: { id: "default" },
+    data: { lastActionAt: new Date() },
+  });
+}
+
+function profileSpacingBlocked(row: Settings, now = new Date()) {
+  if (!row.lastActionAt) return null;
+  const elapsed = now.getTime() - row.lastActionAt.getTime();
+  if (elapsed < row.minJitterSec * 1000) return "jitter" as const;
+  return null;
+}
+
 export async function armCampaign(campaignId: string) {
   const campaign = await prisma.campaign.update({
     where: { id: campaignId },
@@ -177,25 +198,41 @@ export async function tickQueue() {
   if (settings.paused) {
     return { processed: 0, reason: "paused" as const, detail: raw.pausedReason };
   }
-  if (now < settings.nextAllowedAt) {
-    return { processed: 0, reason: "jitter" as const, nextAllowedAt: settings.nextAllowedAt };
-  }
 
   const working = isWorkingTime(settings, now);
+  const sendCooldown = now < settings.nextAllowedAt;
 
   const inviteBlocked = reasonBlocked(settings, "invite", now);
   const messageBlocked = reasonBlocked(settings, "message", now);
 
-  const job = await prisma.campaignContact.findFirst({
-    where: {
-      sendStatus: "queued",
-      runAfter: { lte: now },
-      campaign: { status: "running" },
-      contact: { enrichStatus: "ready", poolStatus: { not: "excluded" } },
-    },
-    include: { campaign: true, contact: true },
-    orderBy: { runAfter: "asc" },
-  });
+  const findDueJob = () =>
+    prisma.campaignContact.findFirst({
+      where: {
+        sendStatus: "queued",
+        runAfter: { lte: now },
+        campaign: { status: "running" },
+        contact: { enrichStatus: "ready", poolStatus: { not: "excluded" } },
+      },
+      include: { campaign: true, contact: true },
+      orderBy: { runAfter: "asc" },
+    });
+
+  let job = await findDueJob();
+  let skipped = 0;
+  while (
+    job &&
+    job.campaign.kind === "invite" &&
+    shouldSkipInvite(job.contact.outreachStatus) &&
+    skipped < 10
+  ) {
+    await prisma.campaignContact.updateMany({
+      where: { id: job.id, sendStatus: "queued" },
+      data: { sendStatus: "skipped", error: ALREADY_CONNECTED_ERROR },
+    });
+    skipped += 1;
+    job = await findDueJob();
+  }
+  if (skipped) await spreadQueuedJobs();
 
   const canSendJob =
     job &&
@@ -211,7 +248,7 @@ export async function tickQueue() {
     };
   }
 
-  if (job && canSendJob && working) {
+  if (job && canSendJob && working && !sendCooldown) {
     const claimed = await prisma.campaignContact.updateMany({
       where: { id: job.id, sendStatus: "queued" },
       data: { sendStatus: "sending" },
@@ -273,6 +310,20 @@ export async function tickQueue() {
       return { processed: 1, reason: "sent" as const, contactId: job.contactId, nextAllowedAt };
     } catch (error) {
       const message = error instanceof Error ? error.message : "Send failed";
+      if (job.campaign.kind === "invite" && isAlreadyConnectedError(error)) {
+        await prisma.campaignContact.update({
+          where: { id: job.id },
+          data: { sendStatus: "skipped", error: ALREADY_CONNECTED_ERROR },
+        });
+        if (job.contact.outreachStatus !== "messaged") {
+          await prisma.contact.update({
+            where: { id: job.contactId },
+            data: { outreachStatus: "connected" },
+          });
+        }
+        await spreadQueuedJobs();
+        return { processed: 1, reason: "skipped" as const, contactId: job.contactId };
+      }
       await prisma.campaignContact.update({
         where: { id: job.id },
         data: { sendStatus: "failed", error: message },
@@ -293,8 +344,12 @@ export async function tickQueue() {
   }
 
   const profileBlocked = reasonBlocked(settings, "profile", now);
-  if (profileBlocked) {
-    return { processed: 0, reason: job ? "empty" : profileBlocked };
+  const profileSpacing = profileSpacingBlocked(raw, now);
+  if (profileBlocked || profileSpacing) {
+    return {
+      processed: 0,
+      reason: profileSpacing ?? profileBlocked ?? "daily_cap",
+    };
   }
 
   const pending = await prisma.contact.findFirst({
@@ -302,15 +357,19 @@ export async function tickQueue() {
     orderBy: { createdAt: "asc" },
   });
   if (!pending) {
+    if (skipped) return { processed: skipped, reason: "skipped" as const };
+    if (sendCooldown) {
+      return { processed: 0, reason: "jitter" as const, nextAllowedAt: settings.nextAllowedAt };
+    }
     if (!working) return { processed: 0, reason: "outside_hours" as const };
     return { processed: 0, reason: "empty" as const };
   }
 
   try {
     await enrichContact(pending.id, { countVisit: true });
-    const nextAllowedAt = await markCooldown();
+    await markProfileCooldown();
     await spreadQueuedJobs();
-    return { processed: 1, reason: "enriched" as const, contactId: pending.id, nextAllowedAt };
+    return { processed: 1, reason: "enriched" as const, contactId: pending.id };
   } catch (error) {
     return {
       processed: 0,

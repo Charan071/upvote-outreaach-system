@@ -3,6 +3,7 @@ import { getLinkedInProfile, isLinkedInLimitError } from "./unipile";
 import { contactTemplateVars, renderTemplate } from "./template";
 import { companyFromHeadline } from "./context-dev";
 import { recordLinkedInFailure } from "./health";
+import { isFirstDegreeProfile, skipQueuedInviteJobs } from "./connected";
 
 export async function enrichContact(contactId: string, opts?: { countVisit?: boolean }) {
   const contact = await prisma.contact.findUnique({ where: { id: contactId } });
@@ -12,9 +13,6 @@ export async function enrichContact(contactId: string, opts?: { countVisit?: boo
     const settings = await prisma.settings.findUnique({ where: { id: "default" } });
     if (settings && settings.profilesToday >= settings.profileDailyCap) {
       throw new Error("Daily LinkedIn profile-visit cap reached (~100/day Unipile recommendation).");
-    }
-    if (settings && settings.nextAllowedAt > new Date()) {
-      throw new Error(`Wait until ${settings.nextAllowedAt.toISOString()} before another LinkedIn call.`);
     }
   }
 
@@ -39,6 +37,8 @@ export async function enrichContact(contactId: string, opts?: { countVisit?: boo
       });
     }
 
+    const alreadyConnected =
+      isFirstDegreeProfile(profile) && contact.outreachStatus !== "messaged";
     const updated = await prisma.contact.update({
       where: { id: contactId },
       data: {
@@ -52,8 +52,12 @@ export async function enrichContact(contactId: string, opts?: { countVisit?: boo
         linkedinSlug: profile.publicIdentifier || contact.linkedinSlug,
         enrichStatus: "ready",
         enrichError: null,
+        ...(alreadyConnected ? { outreachStatus: "connected" } : {}),
       },
     });
+    if (isFirstDegreeProfile(profile)) {
+      await skipQueuedInviteJobs(updated.id);
+    }
     await refreshDraftCampaignCopy(updated);
     return updated;
   } catch (error) {

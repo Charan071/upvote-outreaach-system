@@ -1,0 +1,6 @@
+visual-design skill
+Derived from Anthropic frontend-design (Apache License 2.0)
+https://github.com/anthropics/skills/tree/main/skills/frontend-design
+
+Modified in this repository for Contact pool: operator UX, theme tokens, and
+shared CSS/component constraints.

@@ -2,7 +2,9 @@ name: Queue keep-alive
 
 on:
   schedule:
-    - cron: "*/10 8-18 * * 1-5"
+    # 03:30 UTC = 09:00 IST — wake Render before local work hours for name lookups
+    - cron: "30 3 * * 1-5"
+    - cron: "*/10 4-18 * * 1-5"
   workflow_dispatch:
 
 jobs:
