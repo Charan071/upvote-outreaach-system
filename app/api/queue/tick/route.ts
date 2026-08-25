@@ -1,7 +1,20 @@
 import { NextResponse } from "next/server";
 import { tickQueue } from "@/lib/queue";
 
-export async function POST() {
+function authorized(req: Request) {
+  const secret = process.env.CRON_SECRET;
+  if (!secret) return false;
+  return req.headers.get("authorization") === `Bearer ${secret}`;
+}
+
+export async function POST(req: Request) {
+  if (!process.env.CRON_SECRET) {
+    return NextResponse.json({ error: "not configured" }, { status: 503 });
+  }
+  if (!authorized(req)) {
+    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+  }
+
   try {
     const result = await tickQueue();
     return NextResponse.json(result);

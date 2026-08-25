@@ -1,0 +1,20 @@
+name: Queue keep-alive
+
+on:
+  schedule:
+    - cron: "*/10 8-18 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wake app and tick queue
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "Content-Type: application/json" \
+            --max-time 90 \
+            https://upvote-outreaach-system.onrender.com/api/queue/tick
