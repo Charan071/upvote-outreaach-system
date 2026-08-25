@@ -2,6 +2,7 @@ import { getSettings } from "@/lib/queue";
 import { getAccountSnapshot, healthLabel, healthTone, syncUnipileStatus } from "@/lib/health";
 import { SettingsForm } from "@/components/SettingsForm";
 import { Badge, PageHeader, Stat } from "@/components/ui";
+import { formatUtcClock, formatUtcDateTime } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
 
@@ -22,7 +23,7 @@ export default async function SettingsPage() {
         <Stat value={`${snapshot.remaining.invites}/${snapshot.dailyCap}`} label="Invites left today" icon="send" />
         <Stat value={snapshot.queued} label="Queued on active campaigns" icon="campaign" />
         <Stat
-          value={settings.nextAllowedAt ? settings.nextAllowedAt.toLocaleTimeString() : "now"}
+          value={settings.nextAllowedAt ? formatUtcClock(settings.nextAllowedAt) : "now"}
           label="Next worker action"
           icon="clock"
         />
@@ -32,7 +33,7 @@ export default async function SettingsPage() {
         {snapshot.warning ? <p className="warn-text">{snapshot.warning}</p> : null}
         <p className="muted">
           Connection {settings.unipileStatus || "unknown"} · last sync{" "}
-          {settings.lastSyncAt ? settings.lastSyncAt.toLocaleString() : "never"} · weekly invites{" "}
+          {settings.lastSyncAt ? formatUtcDateTime(settings.lastSyncAt) : "never"} · weekly invites{" "}
           {snapshot.remaining.weeklyInvites} left · messages {snapshot.remaining.messages} left · profile
           visits {snapshot.remaining.profiles} left.
         </p>

@@ -1,6 +1,8 @@
 import { armCampaign, spreadQueuedJobs, tickQueue } from "./queue";
 import { prisma } from "./prisma";
 
+process.env.TZ = "UTC";
+
 const globalForWorker = globalThis as unknown as { queueWorkerStarted?: boolean };
 
 async function recoverInterruptedSends() {

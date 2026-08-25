@@ -6,6 +6,8 @@
  * Unipile does not enforce them; LinkedIn returns 429/500/422 cannot_resend_yet.
  */
 
+import { utcParts } from "./time";
+
 export const UNIPILE_LINKEDIN = {
   paid: {
     inviteDailyMax: 80,
@@ -98,30 +100,12 @@ export function randomJitterMs(settings: { minJitterSec: number; maxJitterSec: n
   return randomBetween(settings.minJitterSec, settings.maxJitterSec) * 1000;
 }
 
-function zonedParts(date: Date, timeZone: string) {
-  const parts = new Intl.DateTimeFormat("en-GB", {
-    timeZone,
-    weekday: "short",
-    hour: "numeric",
-    minute: "numeric",
-    hourCycle: "h23",
-  }).formatToParts(date);
-  const get = (type: string) => parts.find((part) => part.type === type)?.value ?? "";
-  const weekday = get("weekday");
-  const map: Record<string, number> = { Sun: 0, Mon: 1, Tue: 2, Wed: 3, Thu: 4, Fri: 5, Sat: 6 };
-  return {
-    weekday: map[weekday] ?? date.getDay(),
-    hour: Number(get("hour")),
-    minute: Number(get("minute")),
-  };
-}
-
 export function isWorkingTime(settings: LimitSettings, date = new Date()) {
   const days = settings.workDays
     .split(",")
     .map((value) => Number(value.trim()))
     .filter((value) => Number.isFinite(value));
-  const { weekday, hour } = zonedParts(date, settings.timezone || "UTC");
+  const { weekday, hour } = utcParts(date);
   if (!days.includes(weekday)) return false;
   return hour >= settings.workStartHour && hour < settings.workEndHour;
 }
@@ -130,7 +114,7 @@ export function nextWorkingMoment(settings: LimitSettings, from = new Date()) {
   const cursor = new Date(from.getTime());
   for (let i = 0; i < 14 * 24; i++) {
     if (isWorkingTime(settings, cursor)) return cursor;
-    cursor.setMinutes(cursor.getMinutes() + 15);
+    cursor.setUTCMinutes(cursor.getUTCMinutes() + 15);
   }
   return new Date(from.getTime() + 24 * 60 * 60 * 1000);
 }

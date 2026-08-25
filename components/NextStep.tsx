@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Icon } from "@/components/icons";
+import { formatUtcHourRange } from "@/lib/time";
 
 export function NextStep({
   pendingCount,
@@ -14,7 +15,7 @@ export function NextStep({
   workStartHour: number;
   workEndHour: number;
 }) {
-  const hours = `${String(workStartHour).padStart(2, "0")}:00–${String(workEndHour).padStart(2, "0")}:00`;
+  const hours = formatUtcHourRange(workStartHour, workEndHour);
   const step = pendingCount > 0 ? 2 : queuedCount > 0 || readyCount > 0 ? 3 : 1;
 
   return (

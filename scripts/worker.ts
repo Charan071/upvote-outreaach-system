@@ -1,3 +1,5 @@
-import { startQueueWorker } from "../lib/worker";
+process.env.TZ = "UTC";
 
-startQueueWorker();
+void import("../lib/worker").then(({ startQueueWorker }) => {
+  startQueueWorker();
+});
