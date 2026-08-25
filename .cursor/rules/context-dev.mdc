@@ -1,0 +1,17 @@
+---
+description: Context.dev credit-saving conventions for Contact Pool
+alwaysApply: true
+---
+
+# Context.dev
+
+Server-only. `CONTEXT_DEV_API_KEY` never goes to the browser.
+
+Spend credits only to **find LinkedIn `/in/` URLs**. Unipile does name/headline lookup. Do not search again during enrich.
+
+- Wrapper: `lib/context-dev.ts`
+- Daily collect: `lib/discover-ph.ts` — **one** `POST /web/search` (1 credit / 10 results). Reuse today’s run. Docs: https://docs.context.dev/api-reference/web-scraping/search
+- Daily budget: `CONTEXT_DEV_DAILY_CREDIT_BUDGET` (default 1)
+- Disabled (10 credits each): brand retrieve, extract. Do not scrape Product Hunt pages.
+
+Retry 429 only. Do not retry 408/5xx (those can consume another credit). Mock the wrapper in tests.

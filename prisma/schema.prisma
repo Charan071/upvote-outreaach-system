@@ -1,0 +1,132 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Contact {
+  id                String   @id @default(cuid())
+  linkedinUrl       String   @unique
+  linkedinSlug      String   @unique
+  firstName         String?
+  lastName          String?
+  headline          String?
+  company           String?
+  companyDomain     String?
+  contextSnippet    String?
+  unipileProviderId String?  @unique
+  enrichStatus      String   @default("pending")
+  enrichError       String?
+  outreachStatus    String   @default("never")
+  poolStatus        String   @default("none")
+  lastCampaignId    String?
+  lastOutboundAt    DateTime?
+  productName       String?
+  source            String   @default("manual")
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  campaignContacts CampaignContact[]
+  messages         Message[]
+}
+
+model Campaign {
+  id        String   @id @default(cuid())
+  name      String
+  kind      String
+  template  String
+  status    String   @default("draft")
+  dailyCap  Int      @default(15)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  contacts CampaignContact[]
+}
+
+model CampaignContact {
+  id               String    @id @default(cuid())
+  campaignId       String
+  contactId        String
+  renderedMessage  String
+  sendStatus       String    @default("queued")
+  runAfter         DateTime  @default(now())
+  sentAt           DateTime?
+  error            String?
+  unipileId        String?
+  campaign         Campaign  @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  contact          Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, contactId])
+}
+
+model Message {
+  id               String    @id @default(cuid())
+  contactId        String
+  direction        String
+  body             String
+  unipileMessageId String?   @unique
+  receivedAt       DateTime  @default(now())
+  contact          Contact   @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  classification   Classification?
+}
+
+model Classification {
+  id            String    @id @default(cuid())
+  messageId     String    @unique
+  aiLabel       String
+  aiConfidence  Float?
+  aiReason      String?
+  model         String
+  humanLabel    String?
+  reviewedAt    DateTime?
+  message       Message   @relation(fields: [messageId], references: [id], onDelete: Cascade)
+}
+
+model Settings {
+  id                String    @id @default("default")
+  paused            Boolean   @default(false)
+  pausedReason      String?
+  accountTier       String    @default("paid")
+  timezone          String    @default("Asia/Kolkata")
+  workStartHour     Int       @default(9)
+  workEndHour       Int       @default(18)
+  workDays          String    @default("1,2,3,4,5")
+  dailyCap          Int       @default(15)
+  messageDailyCap   Int       @default(20)
+  profileDailyCap   Int       @default(40)
+  weeklyInviteCap   Int       @default(80)
+  sentToday         Int       @default(0)
+  invitesToday      Int       @default(0)
+  messagesToday     Int       @default(0)
+  profilesToday     Int       @default(0)
+  invitesThisWeek   Int       @default(0)
+  windowStart       DateTime  @default(now())
+  weekStart         DateTime  @default(now())
+  nextAllowedAt     DateTime  @default(now())
+  lastActionAt      DateTime?
+  defaultTemplate   String
+  minJitterSec      Int       @default(480)
+  maxJitterSec      Int       @default(1500)
+  contextCreditsRemaining Int?
+  contextCreditsUsedToday Int @default(0)
+  unipileStatus     String?
+  lastSyncAt        DateTime?
+  lastError         String?
+  consecutiveFailures Int     @default(0)
+}
+
+model DiscoveryRun {
+  id                 String   @id @default(cuid())
+  dayKey             String   @unique
+  campaignId         String?
+  productsFound      Int      @default(0)
+  linkedinFound      Int      @default(0)
+  created            Int      @default(0)
+  skippedDuplicates  Int      @default(0)
+  creditsUsed        Int      @default(0)
+  summary            String?
+  createdAt          DateTime @default(now())
+}
