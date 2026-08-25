@@ -2,7 +2,6 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { MessageComposer } from "@/components/MessageComposer";
 import { IconLabel } from "@/components/icons";
 import {
   clampInviteDailyCap,
@@ -11,7 +10,6 @@ import {
   clampProfileDailyCap,
   clampWeeklyInviteCap,
   inviteDailyMax,
-  inviteNoteMax,
   inviteWeeklyMax,
   remaining,
   UNIPILE_LINKEDIN,
@@ -29,7 +27,6 @@ type FormState = {
   weeklyInviteCap: number;
   minJitterSec: number;
   maxJitterSec: number;
-  defaultTemplate: string;
 };
 
 function clampForm(next: FormState): FormState {
@@ -58,7 +55,6 @@ export function SettingsForm({
   weeklyInviteCap,
   minJitterSec,
   maxJitterSec,
-  defaultTemplate,
   invitesToday,
   invitesThisWeek,
   messagesToday,
@@ -76,7 +72,6 @@ export function SettingsForm({
   weeklyInviteCap: number;
   minJitterSec: number;
   maxJitterSec: number;
-  defaultTemplate: string;
   invitesToday: number;
   invitesThisWeek: number;
   messagesToday: number;
@@ -96,7 +91,6 @@ export function SettingsForm({
       weeklyInviteCap,
       minJitterSec,
       maxJitterSec,
-      defaultTemplate,
     }),
   );
   const [busy, setBusy] = useState(false);
@@ -130,7 +124,6 @@ export function SettingsForm({
           profileDailyCap: data.settings.profileDailyCap,
           minJitterSec: data.settings.minJitterSec,
           maxJitterSec: data.settings.maxJitterSec,
-          defaultTemplate: data.settings.defaultTemplate,
         }),
       );
     }
@@ -264,17 +257,9 @@ export function SettingsForm({
         </label>
       </div>
       <p className="muted">
-        Unipile: space calls randomly during working hours, never in a regular chain. Defaults are 8–25
-        minutes. Paid accounts cannot exceed 80 invites/day and 200/week. Profile visits and messages
-        cannot exceed 100/day. Start lower on new accounts.
+        The background worker spaces LinkedIn actions randomly during working hours. Defaults are 8–25 minutes
+        between sends and profile lookups. Paid accounts cannot exceed 80 invites/day and 200/week.
       </p>
-
-      <MessageComposer
-        label="Default invite template"
-        value={form.defaultTemplate}
-        onChange={(defaultTemplate) => patch({ defaultTemplate })}
-        noteMax={inviteNoteMax(form.accountTier)}
-      />
       <button className="btn" disabled={busy} type="submit">
         <IconLabel name="save">{busy ? "Saving…" : "Save"}</IconLabel>
       </button>

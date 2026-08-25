@@ -41,8 +41,9 @@ export async function getSettings() {
   const weekElapsed = now.getTime() - weekStart.getTime() >= 7 * 24 * 60 * 60 * 1000;
   const dayRollover = !row.windowStart || row.windowStart < today;
   const oldJitter = row.minJitterSec === 45 && row.maxJitterSec === 120;
+  const badWorkHours = row.workStartHour === 0 && row.workEndHour === 24;
 
-  if (dayRollover || weekElapsed || oldJitter) {
+  if (dayRollover || weekElapsed || oldJitter || badWorkHours) {
     return prisma.settings.update({
       where: { id: "default" },
       data: {
@@ -60,6 +61,7 @@ export async function getSettings() {
         ...(oldJitter
           ? { minJitterSec: UNIPILE_LINKEDIN.minJitterSec, maxJitterSec: UNIPILE_LINKEDIN.maxJitterSec }
           : {}),
+        ...(badWorkHours ? { workStartHour: 9, workEndHour: 18 } : {}),
       },
     });
   }
@@ -99,6 +101,15 @@ async function markCooldown() {
     data: { nextAllowedAt, lastActionAt: new Date() },
   });
   return nextAllowedAt;
+}
+
+export async function armCampaign(campaignId: string) {
+  const campaign = await prisma.campaign.update({
+    where: { id: campaignId },
+    data: { status: "running" },
+  });
+  const scheduled = await spreadQueuedJobs(campaignId);
+  return { campaign, scheduled };
 }
 
 export async function spreadQueuedJobs(campaignId?: string) {
@@ -171,10 +182,13 @@ export async function tickQueue() {
   }
 
   if (job && canSendJob && working) {
-    await prisma.campaignContact.update({
-      where: { id: job.id },
+    const claimed = await prisma.campaignContact.updateMany({
+      where: { id: job.id, sendStatus: "queued" },
       data: { sendStatus: "sending" },
     });
+    if (claimed.count !== 1) {
+      return { processed: 0, reason: "empty" as const };
+    }
 
     try {
       const providerId = job.contact.unipileProviderId;

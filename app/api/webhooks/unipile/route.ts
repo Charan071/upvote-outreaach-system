@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { classifyReply } from "@/lib/gemini";
 import { applyUnipileStatus } from "@/lib/health";
 import { isOurUnipileAccount } from "@/lib/unipile";
 
@@ -82,7 +83,7 @@ export async function POST(req: Request) {
       : null;
     if (!contact) return NextResponse.json({ ok: true, event, matched: false });
 
-    await prisma.message.create({
+    const created = await prisma.message.create({
       data: {
         contactId: contact.id,
         direction: "in",
@@ -90,6 +91,20 @@ export async function POST(req: Request) {
         unipileMessageId: messageId,
       },
     });
+    try {
+      const classified = await classifyReply(text);
+      await prisma.classification.create({
+        data: {
+          messageId: created.id,
+          aiLabel: classified?.label ?? "unclear",
+          aiConfidence: classified?.confidence ?? null,
+          aiReason: classified?.reason ?? (classified ? null : "Gemini key not set"),
+          model: classified?.model ?? "none",
+        },
+      });
+    } catch {
+      // Review still lists the inbound message without a Gemini label.
+    }
     await prisma.contact.update({
       where: { id: contact.id },
       data: { poolStatus: "pending_review", outreachStatus: "connected" },

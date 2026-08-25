@@ -66,7 +66,7 @@ export function ImportForm({
       <div>
         <p className="kicker">Step 1</p>
         <h2>Add LinkedIn profiles</h2>
-        <p className="muted">CSV or pasted URLs. First names are looked up later, one visit at a time.</p>
+        <p className="muted">CSV or pasted URLs. The worker looks up first names one profile at a time.</p>
       </div>
       <div className="import-grid">
         <div className="import-pane">

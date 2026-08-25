@@ -1,15 +1,21 @@
 import Link from "next/link";
-import { QueueTickButton } from "@/components/QueueTickButton";
 import { Icon } from "@/components/icons";
 
 export function NextStep({
   pendingCount,
   readyCount,
+  queuedCount,
+  workStartHour,
+  workEndHour,
 }: {
   pendingCount: number;
   readyCount: number;
+  queuedCount: number;
+  workStartHour: number;
+  workEndHour: number;
 }) {
-  const step = pendingCount > 0 ? 2 : readyCount > 0 ? 3 : 1;
+  const hours = `${String(workStartHour).padStart(2, "0")}:00–${String(workEndHour).padStart(2, "0")}:00`;
+  const step = pendingCount > 0 ? 2 : queuedCount > 0 || readyCount > 0 ? 3 : 1;
 
   return (
     <section className="next-step">
@@ -28,26 +34,38 @@ export function NextStep({
         <div className="next-step-body">
           <div>
             <p className="kicker">Next</p>
-            <h2>Look up {pendingCount} name{pendingCount === 1 ? "" : "s"}</h2>
+            <h2>Looking up {pendingCount} name{pendingCount === 1 ? "" : "s"}</h2>
             <p className="muted">
-              LinkedIn allows about 100 profile visits a day. Each visit is spaced out. Invites wait until
-              9:00–18:00; name lookups can run now.
+              The worker visits one LinkedIn profile at a time, with a random gap. Invites wait until {hours}.
             </p>
           </div>
-          <QueueTickButton label="Look up next profile" icon="sync" primary />
+        </div>
+      ) : queuedCount > 0 ? (
+        <div className="next-step-body">
+          <div>
+            <p className="kicker">Next</p>
+            <h2>Sending {queuedCount} invite{queuedCount === 1 ? "" : "s"}</h2>
+            <p className="muted">
+              The worker sends one connection request at a time during {hours}, with a random gap so they are not
+              sent in a burst.
+            </p>
+          </div>
+          <Link className="btn secondary" href="/campaigns">
+            <Icon name="campaign" size={16} /> View campaigns
+          </Link>
         </div>
       ) : readyCount > 0 ? (
         <div className="next-step-body">
           <div>
             <p className="kicker">Next</p>
-            <h2>Write the invite and send</h2>
+            <h2>Write the invite</h2>
             <p className="muted">
-              {readyCount} contact{readyCount === 1 ? " is" : "s are"} ready. You’ll write the note, then send
-              connection requests one at a time.
+              {readyCount} contact{readyCount === 1 ? " is" : "s are"} ready. Write one note; the worker queues and
+              sends it one person at a time.
             </p>
           </div>
           <Link className="btn" href="/campaigns/new">
-            <Icon name="send" size={16} /> Write invite and send
+            <Icon name="send" size={16} /> Write invite
           </Link>
         </div>
       ) : (

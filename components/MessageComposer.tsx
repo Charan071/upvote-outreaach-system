@@ -88,7 +88,7 @@ export function MessageComposer({
       ) : null}
       <div className="preview">
         <p className="kicker">Preview for {previewName}</p>
-        <p>{preview}</p>
+        <p className="review-body">{preview}</p>
       </div>
     </div>
   );

@@ -28,7 +28,7 @@ export default function NewCampaignPage() {
     const res = await fetch("/api/campaigns", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, kind, template }),
+      body: JSON.stringify({ name: name.trim() || undefined, kind, template }),
     });
     const data = await res.json();
     setBusy(false);
@@ -39,29 +39,37 @@ export default function NewCampaignPage() {
     router.push(`/campaigns/${data.campaign.id}`);
   }
 
+  const title = kind === "message" ? "Write the follow-up message" : "Write the invite";
+  const submitLabel = kind === "message" ? "Queue messages" : "Queue invites";
+
   return (
     <form onSubmit={onSubmit} className="panel stack" style={{ maxWidth: 720 }}>
       <p className="kicker">New campaign</p>
-      <h1>Write the invite, then send</h1>
+      <h1>{title}</h1>
       <p className="muted">
-        This queues connection requests to people who are already looked up. After you save, press Start sending, then Send next invite.
+        One note for everyone in this campaign. The worker sends one {kind === "message" ? "message" : "invite"} at a
+        time during working hours, with a random gap between each.
       </p>
       <label>
-        Name
-        <input value={name} onChange={(e) => setName(e.target.value)} required />
+        Name <span className="muted">(optional)</span>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder={kind === "message" ? "Messages · today" : "Invites · today"}
+        />
       </label>
       <label>
         Kind
         <select value={kind} onChange={(e) => setKind(e.target.value as "invite" | "message")}>
-          <option value="invite">Invite (never contacted)</option>
-          <option value="message">Message (positive pool only)</option>
+          <option value="invite">Connection invites (not contacted yet)</option>
+          <option value="message">Follow-up messages (interested pool)</option>
         </select>
       </label>
-      <MessageComposer kind={kind} value={template} onChange={setTemplate} />
+      <MessageComposer kind={kind} value={template} onChange={setTemplate} label="Note" />
       <button className="btn" disabled={busy} type="submit">
-        <IconLabel name="send">{busy ? "Saving…" : "Save note and continue"}</IconLabel>
+        <IconLabel name="send">{busy ? "Queueing…" : submitLabel}</IconLabel>
       </button>
-      {error ? <p className="muted">{error}</p> : null}
+      {error ? <p className="warn-text">{error}</p> : null}
     </form>
   );
 }

@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { prisma } from "@/lib/prisma";
+import { getSettings } from "@/lib/queue";
 import { ImportForm } from "@/components/ImportForm";
 import { DiscoverPhButton } from "@/components/DiscoverPhButton";
 import { NextStep } from "@/components/NextStep";
 import { Icon, IconLabel } from "@/components/icons";
-import { Badge, Empty, PageHeader, Stat, StatusBadge } from "@/components/ui";
+import { Empty, PageHeader, Stat, StatusBadge } from "@/components/ui";
+import { contactStatus } from "@/lib/status";
 
 export const dynamic = "force-dynamic";
 
@@ -14,25 +16,32 @@ export default async function ContactsPage({
   searchParams: Promise<{ filter?: string }>;
 }) {
   const { filter } = await searchParams;
+  const settings = await getSettings();
   const where =
     filter === "positive"
       ? { poolStatus: "positive" }
       : filter === "pending"
         ? { poolStatus: "pending_review" }
         : filter === "never"
-          ? { outreachStatus: "never" }
+          ? { outreachStatus: "never", enrichStatus: "ready" }
+          : filter === "queued"
+            ? { outreachStatus: "queued" }
           : filter === "invited"
-            ? { outreachStatus: { in: ["queued", "invited", "connected", "messaged"] } }
+            ? { outreachStatus: { in: ["invited", "connected", "messaged"] } }
+            : filter === "needs_name"
+              ? { enrichStatus: "pending" }
             : {};
 
   const contacts = await prisma.contact.findMany({ where, orderBy: { createdAt: "desc" } });
-  const [total, positive, pending, never, pendingEnrich, readyToInvite] = await Promise.all([
+  const [total, positive, pendingReview, readyToInvite, pendingEnrich, queuedCount] = await Promise.all([
     prisma.contact.count(),
     prisma.contact.count({ where: { poolStatus: "positive" } }),
     prisma.contact.count({ where: { poolStatus: "pending_review" } }),
-    prisma.contact.count({ where: { outreachStatus: "never" } }),
-    prisma.contact.count({ where: { enrichStatus: "pending" } }),
     prisma.contact.count({ where: { enrichStatus: "ready", outreachStatus: "never" } }),
+    prisma.contact.count({ where: { enrichStatus: "pending" } }),
+    prisma.campaignContact.count({
+      where: { sendStatus: { in: ["queued", "sending"] }, campaign: { status: "running" } },
+    }),
   ]);
 
   return (
@@ -43,35 +52,47 @@ export default async function ContactsPage({
         actions={
           readyToInvite > 0 ? (
             <Link className="btn" href="/campaigns/new">
-              <IconLabel name="send">Write invite and send</IconLabel>
+              <IconLabel name="send">Write invite</IconLabel>
             </Link>
           ) : null
         }
       />
       <div className="stats">
-        <Stat value={total} label="In pool" icon="pool" />
-        <Stat value={never} label="Never contacted" icon="user" />
-        <Stat value={pending} label="Pending review" icon="inbox" />
-        <Stat value={positive} label="Positive pool" icon="star" />
+        <Stat value={total} label="People" icon="pool" />
+        <Stat value={readyToInvite} label="Ready to invite" icon="user" />
+        <Stat value={pendingReview} label="Needs reply review" icon="inbox" />
+        <Stat value={positive} label="Interested" icon="star" />
       </div>
-      <NextStep pendingCount={pendingEnrich} readyCount={readyToInvite} />
+      <NextStep
+        pendingCount={pendingEnrich}
+        readyCount={readyToInvite}
+        queuedCount={queuedCount}
+        workStartHour={settings.workStartHour}
+        workEndHour={settings.workEndHour}
+      />
       <DiscoverPhButton />
       <ImportForm pendingCount={pendingEnrich} readyCount={readyToInvite} />
       <div className="filters">
         <Link className={!filter ? "on" : ""} href="/">
           <Icon name="filter" size={14} />All
         </Link>
+        <Link className={filter === "needs_name" ? "on" : ""} href="/?filter=needs_name">
+          <Icon name="sync" size={14} />Needs name
+        </Link>
         <Link className={filter === "never" ? "on" : ""} href="/?filter=never">
-          <Icon name="user" size={14} />Never contacted
+          <Icon name="user" size={14} />Ready to invite
+        </Link>
+        <Link className={filter === "queued" ? "on" : ""} href="/?filter=queued">
+          <Icon name="clock" size={14} />Queued
         </Link>
         <Link className={filter === "invited" ? "on" : ""} href="/?filter=invited">
-          <Icon name="send" size={14} />Contacted
+          <Icon name="send" size={14} />Invited
         </Link>
         <Link className={filter === "pending" ? "on" : ""} href="/?filter=pending">
-          <Icon name="inbox" size={14} />Pending review
+          <Icon name="inbox" size={14} />Needs reply review
         </Link>
         <Link className={filter === "positive" ? "on" : ""} href="/?filter=positive">
-          <Icon name="star" size={14} />Positive
+          <Icon name="star" size={14} />Interested
         </Link>
       </div>
       {contacts.length === 0 ? (
@@ -89,9 +110,7 @@ export default async function ContactsPage({
                 <th>Launch</th>
                 <th>Company</th>
                 <th>Headline</th>
-                <th>Enrich</th>
-                <th>Outreach</th>
-                <th>Pool</th>
+                <th>Status</th>
               </tr>
             </thead>
             <tbody>
@@ -105,11 +124,7 @@ export default async function ContactsPage({
                   <td className="muted">{contact.productName || "—"}</td>
                   <td className="muted">{contact.company || "—"}</td>
                   <td className="muted">{contact.headline || "—"}</td>
-                  <td><StatusBadge status={contact.enrichStatus} /></td>
-                  <td><StatusBadge status={contact.outreachStatus} /></td>
-                  <td>
-                    {contact.poolStatus === "none" ? <Badge>none</Badge> : <StatusBadge status={contact.poolStatus} />}
-                  </td>
+                  <td><StatusBadge status={contactStatus(contact)} /></td>
                 </tr>
               ))}
             </tbody>

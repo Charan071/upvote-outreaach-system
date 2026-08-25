@@ -30,20 +30,22 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
   if (overflow) return NextResponse.json({ error: overflow }, { status: 400 });
 
   await prisma.campaign.update({ where: { id }, data: { template } });
-
-  let updated = 0;
-  if (body?.applyToQueued) {
-    const queued = campaign.contacts.filter((row) => row.sendStatus === "queued");
-    for (const row of queued) {
-      await prisma.campaignContact.update({
-        where: { id: row.id },
-        data: {
-          renderedMessage: fillTemplate(template, contactTemplateVars(row.contact)),
-        },
-      });
-      updated += 1;
-    }
+  if (campaign.kind === "invite") {
+    await prisma.settings.update({
+      where: { id: "default" },
+      data: { defaultTemplate: template },
+    });
   }
 
-  return NextResponse.json({ ok: true, updated });
+  const queued = campaign.contacts.filter((row) => row.sendStatus === "queued");
+  for (const row of queued) {
+    await prisma.campaignContact.update({
+      where: { id: row.id },
+      data: {
+        renderedMessage: fillTemplate(template, contactTemplateVars(row.contact)),
+      },
+    });
+  }
+
+  return NextResponse.json({ ok: true, updated: queued.length });
 }

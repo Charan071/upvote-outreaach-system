@@ -23,20 +23,26 @@ export function CampaignMessageEditor({
   const [value, setValue] = useState(template);
   const [busy, setBusy] = useState(false);
   const [msg, setMsg] = useState<string | null>(null);
+  const [err, setErr] = useState<string | null>(null);
   const max = kind === "message" ? 2000 : 300;
   const over = fillTemplate(value, { firstName: previewName, company: previewCompany }).length > max;
 
-  async function save(applyToQueued: boolean) {
+  async function save() {
     setBusy(true);
     setMsg(null);
+    setErr(null);
     const res = await fetch(`/api/campaigns/${campaignId}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ template: value, applyToQueued }),
+      body: JSON.stringify({ template: value }),
     });
-    const data = await res.json();
+    const data = await res.json().catch(() => ({}));
     setBusy(false);
-    setMsg(data.error || (applyToQueued ? `Updated ${data.updated} queued messages.` : "Template saved."));
+    if (!res.ok) {
+      setErr(data.error || "Could not save");
+      return;
+    }
+    setMsg(`Saved. Updated ${data.updated ?? 0} queued notes.`);
     router.refresh();
   }
 
@@ -48,15 +54,13 @@ export function CampaignMessageEditor({
         onChange={setValue}
         previewName={previewName}
         previewCompany={previewCompany}
-        label="Campaign message"
+        label="Invite note"
       />
       <div className="row">
-        <button className="btn secondary" disabled={busy || over} onClick={() => save(false)} type="button">
-          <IconLabel name="save">Save template</IconLabel>
+        <button className="btn" disabled={busy || over} onClick={save} type="button">
+          <IconLabel name="save">{busy ? "Saving…" : "Save note"}</IconLabel>
         </button>
-        <button className="btn" disabled={busy || over} onClick={() => save(true)} type="button">
-          <IconLabel name="apply">Apply to all queued</IconLabel>
-        </button>
+        {err ? <p className="warn-text">{err}</p> : null}
         {msg ? <p className="muted">{msg}</p> : null}
       </div>
     </section>

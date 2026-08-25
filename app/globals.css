@@ -452,8 +452,25 @@ tr:last-child td { border-bottom: 0; }
   font-size: 13px;
 }
 .review-card { padding: var(--space-md) 18px; margin-bottom: var(--space-sm); }
-.review-actions { display: flex; gap: 10px; margin-top: 12px; align-items: center; }
+.review-body { white-space: pre-wrap; margin: 0 0 8px; }
+.review-actions { display: flex; gap: 10px; margin-top: 12px; align-items: center; flex-wrap: wrap; }
 .review-actions select { width: auto; min-width: 160px; margin-top: 0; }
+
+nav a { position: relative; }
+.nav-badge {
+  margin-left: auto;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
 
 .filters { display: flex; gap: 8px; margin-bottom: var(--space-md); flex-wrap: wrap; }
 .filters a {

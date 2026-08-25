@@ -20,10 +20,10 @@ export default async function SettingsPage() {
           icon="settings"
         />
         <Stat value={`${snapshot.remaining.invites}/${snapshot.dailyCap}`} label="Invites left today" icon="send" />
-        <Stat value={snapshot.queued} label="Queued on running campaigns" icon="campaign" />
+        <Stat value={snapshot.queued} label="Queued on active campaigns" icon="campaign" />
         <Stat
           value={settings.nextAllowedAt ? settings.nextAllowedAt.toLocaleTimeString() : "now"}
-          label="Next LinkedIn action"
+          label="Next worker action"
           icon="clock"
         />
       </div>
@@ -44,9 +44,9 @@ export default async function SettingsPage() {
         </p>
       </section>
       <p className="muted" style={{ marginBottom: 18 }}>
-        Point Unipile’s Users webhook (events <code>new_relation</code> and Account Status) at{" "}
-        <code>/api/webhooks/unipile</code>. Inbox chats are synced by Unipile; use Review → Sync inbox only
-        on demand.
+        A background worker sends queued invites and looks up names automatically. Point Unipile’s Users webhook
+        (events <code>new_relation</code>, <code>message_received</code>, and Account Status) at{" "}
+        <code>/api/webhooks/unipile</code>. Use Review → Sync inbox only if a reply is missing.
       </p>
       <SettingsForm
         paused={settings.paused}
@@ -61,7 +61,6 @@ export default async function SettingsPage() {
         weeklyInviteCap={snapshot.weeklyInviteCap}
         minJitterSec={settings.minJitterSec}
         maxJitterSec={settings.maxJitterSec}
-        defaultTemplate={settings.defaultTemplate}
         invitesToday={settings.invitesToday}
         invitesThisWeek={settings.invitesThisWeek}
         messagesToday={settings.messagesToday}

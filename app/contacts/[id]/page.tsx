@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { RetryEnrichButton } from "@/components/RetryEnrichButton";
 import { Icon } from "@/components/icons";
 import { PageHeader, Stat, StatusBadge } from "@/components/ui";
+import { contactStatus } from "@/lib/status";
 
 export const dynamic = "force-dynamic";
 
@@ -26,9 +27,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
         actions={contact.enrichStatus === "failed" ? <RetryEnrichButton id={contact.id} /> : null}
       />
       <div className="stats stats-3">
-        <Stat value={<StatusBadge status={contact.enrichStatus} />} label="Enrich" icon="sync" />
-        <Stat value={<StatusBadge status={contact.outreachStatus} />} label="Outreach" icon="send" />
-        <Stat value={<StatusBadge status={contact.poolStatus} />} label="Pool" icon="star" />
+        <Stat value={<StatusBadge status={contactStatus(contact)} />} label="Status" icon="user" />
       </div>
       <section className="panel stack">
         <p>
@@ -45,7 +44,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
           </p>
         ) : null}
         {contact.contextSnippet ? <p className="muted">{contact.contextSnippet}</p> : null}
-        {contact.enrichError ? <p className="muted">{contact.enrichError}</p> : null}
+        {contact.enrichError ? <p className="warn-text">{contact.enrichError}</p> : null}
       </section>
 
       <h2>Campaign history</h2>
@@ -61,7 +60,7 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
               {contact.campaignContacts.map((row) => (
                 <tr key={row.id}>
                   <td><Link href={`/campaigns/${row.campaignId}`}>{row.campaign.name}</Link></td>
-                  <td>{row.renderedMessage}</td>
+                  <td className="queued-note-locked">{row.renderedMessage}</td>
                   <td><StatusBadge status={row.sendStatus} /></td>
                 </tr>
               ))}
@@ -72,14 +71,14 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
 
       <h2 className="section-title">Inbound</h2>
       {contact.messages.length === 0 ? (
-        <p className="muted">No inbound messages synced.</p>
+        <p className="muted">No replies yet.</p>
       ) : (
         <div className="stack">
           {contact.messages.map((message) => (
             <article key={message.id} className="review-card">
-              <p>{message.body}</p>
+              <p className="review-body">{message.body}</p>
               <p className="muted">
-                {message.classification?.humanLabel || message.classification?.aiLabel || "unclassified"}
+                {message.classification?.humanLabel || message.classification?.aiLabel || "Not reviewed"}
               </p>
             </article>
           ))}

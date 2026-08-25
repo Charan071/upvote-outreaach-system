@@ -17,7 +17,7 @@ export function RetryEnrichButton({ id }: { id: string }) {
 
   return (
     <button className="btn secondary" disabled={busy} onClick={retry} type="button">
-      <IconLabel name="sync">{busy ? "Retrying…" : "Retry enrich"}</IconLabel>
+      <IconLabel name="sync">{busy ? "Retrying…" : "Look up name again"}</IconLabel>
     </button>
   );
 }

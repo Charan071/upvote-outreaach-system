@@ -10,24 +10,46 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ error: "Invalid label." }, { status: 400 });
   }
 
-  const classification = await prisma.classification.findUnique({
+  const message = await prisma.message.findUnique({
     where: { id },
-    include: { message: true },
+    include: { classification: true },
   });
-  if (!classification) return NextResponse.json({ error: "Not found" }, { status: 404 });
+  if (!message || message.direction !== "in") {
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
+  }
 
   const poolStatus = label === "positive" ? "positive" : label === "unclear" ? "pending_review" : "excluded";
+  const reviewedAt = new Date();
 
-  await prisma.$transaction([
-    prisma.classification.update({
-      where: { id },
-      data: { humanLabel: label, reviewedAt: new Date() },
-    }),
-    prisma.contact.update({
-      where: { id: classification.message.contactId },
-      data: { poolStatus },
-    }),
-  ]);
+  if (message.classification) {
+    await prisma.$transaction([
+      prisma.classification.update({
+        where: { id: message.classification.id },
+        data: { humanLabel: label, reviewedAt },
+      }),
+      prisma.contact.update({
+        where: { id: message.contactId },
+        data: { poolStatus },
+      }),
+    ]);
+  } else {
+    await prisma.$transaction([
+      prisma.classification.create({
+        data: {
+          messageId: message.id,
+          aiLabel: label,
+          aiReason: "Labeled in Review",
+          model: "human",
+          humanLabel: label,
+          reviewedAt,
+        },
+      }),
+      prisma.contact.update({
+        where: { id: message.contactId },
+        data: { poolStatus },
+      }),
+    ]);
+  }
 
   return NextResponse.json({ ok: true, poolStatus });
 }

@@ -1,5 +1,6 @@
 import type { CSSProperties, ReactNode } from "react";
 import { Icon, type IconName } from "@/components/icons";
+import { statusLabel } from "@/lib/status";
 
 export function PageHeader({
   kicker,
@@ -58,12 +59,12 @@ export function StatusBadge({ status }: { status: string }) {
       ? "good"
       : status === "failed" || status === "excluded" || status === "stop" || status === "decline"
         ? "bad"
-        : status === "pending" || status === "pending_review" || status === "queued" || status === "paused"
+        : status === "pending" || status === "pending_review" || status === "queued" || status === "paused" || status === "draft"
           ? "warn"
           : status === "invited" || status === "connected" || status === "messaged"
             ? "accent"
             : "neutral";
-  return <Badge tone={tone}>{status.replaceAll("_", " ")}</Badge>;
+  return <Badge tone={tone}>{statusLabel(status)}</Badge>;
 }
 
 export function Stat({

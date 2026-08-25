@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getSettings, spreadQueuedJobs } from "@/lib/queue";
+import { armCampaign, getSettings } from "@/lib/queue";
 import { deriveAccountHealth, startCampaignBlock, syncUnipileStatus } from "@/lib/health";
 import { linkedInAccountConfigured } from "@/lib/unipile";
 import {
@@ -45,10 +45,6 @@ export async function POST(_req: Request, { params }: { params: Promise<{ id: st
   });
   if (blocked) return NextResponse.json({ error: blocked }, { status: 400 });
 
-  const updated = await prisma.campaign.update({
-    where: { id },
-    data: { status: "running" },
-  });
-  const scheduled = await spreadQueuedJobs(id);
+  const { campaign: updated, scheduled } = await armCampaign(id);
   return NextResponse.json({ campaign: updated, scheduled });
 }

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { getSettings } from "@/lib/queue";
+import { armCampaign, getSettings } from "@/lib/queue";
 import {
   assertInviteCopy,
   contactTemplateVars,
@@ -18,13 +18,14 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const body = await req.json().catch(() => null);
-  const name = String(body?.name || "").trim();
   const kind = body?.kind === "message" ? "message" : "invite";
   const settings = await getSettings();
   const template = String(body?.template || settings.defaultTemplate).trim();
   const copyError = kind === "invite" ? assertInviteCopy(template) : null;
   if (copyError) return NextResponse.json({ error: copyError }, { status: 400 });
-  if (!name) return NextResponse.json({ error: "Name is required." }, { status: 400 });
+  const name =
+    String(body?.name || "").trim() ||
+    `${kind === "message" ? "Messages" : "Invites"} · ${new Date().toISOString().slice(0, 10)}`;
 
   const ids: string[] = Array.isArray(body?.contactIds) ? body.contactIds.map(String) : [];
 
@@ -56,18 +57,18 @@ export async function POST(req: Request) {
     .find(Boolean);
   if (overflow) return NextResponse.json({ error: overflow }, { status: 400 });
 
-  const campaign = await prisma.campaign.create({
+  const created = await prisma.campaign.create({
     data: {
       name,
       kind,
       template,
       status: "draft",
       contacts: {
-        create: contacts.map((contact, index) => ({
+        create: contacts.map((contact) => ({
           contactId: contact.id,
           renderedMessage: fillTemplate(template, contactTemplateVars(contact)),
           sendStatus: "queued",
-          runAfter: new Date(Date.now() + index * 60 * 60 * 1000),
+          runAfter: new Date(),
         })),
       },
     },
@@ -76,9 +77,14 @@ export async function POST(req: Request) {
   if (kind === "invite") {
     await prisma.contact.updateMany({
       where: { id: { in: contacts.map((c) => c.id) } },
-      data: { outreachStatus: "queued", lastCampaignId: campaign.id },
+      data: { outreachStatus: "queued", lastCampaignId: created.id },
+    });
+    await prisma.settings.update({
+      where: { id: "default" },
+      data: { defaultTemplate: template },
     });
   }
 
-  return NextResponse.json({ campaign });
+  const { campaign, scheduled } = await armCampaign(created.id);
+  return NextResponse.json({ campaign, scheduled });
 }

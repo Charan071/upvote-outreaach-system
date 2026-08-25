@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { IconLabel } from "@/components/icons";
-import { QueueTickButton } from "@/components/QueueTickButton";
 
 export function CampaignActions({
   id,
@@ -22,8 +21,11 @@ export function CampaignActions({
     const res = await fetch(path, { method: "POST" });
     const data = await res.json().catch(() => ({}));
     setBusy(false);
-    if (data.error) setMsg(data.error);
-    else if (path.endsWith("/start")) setMsg("Sending is armed. Use Send next invite to send one connection request.");
+    if (!res.ok) {
+      setMsg(data.error || "Could not update campaign");
+      return;
+    }
+    setMsg(path.endsWith("/pause") ? "Paused. The worker will not send from this campaign." : "The worker will send one invite at a time, with a random gap.");
     router.refresh();
   }
 
@@ -31,14 +33,13 @@ export function CampaignActions({
     <div className="actions">
       {status !== "running" ? (
         <button className="btn" disabled={busy} onClick={() => startOrPause(`/api/campaigns/${id}/start`)} type="button">
-          <IconLabel name="play">{busy ? "Starting…" : "Start sending"}</IconLabel>
+          <IconLabel name="play">{busy ? "Starting…" : "Resume"}</IconLabel>
         </button>
       ) : (
         <button className="btn secondary" disabled={busy} onClick={() => startOrPause(`/api/campaigns/${id}/pause`)} type="button">
           <IconLabel name="pause">Pause</IconLabel>
         </button>
       )}
-      <QueueTickButton label="Send next invite" icon="send" primary={status === "running"} />
       {msg ? <p className="muted">{msg}</p> : null}
     </div>
   );
