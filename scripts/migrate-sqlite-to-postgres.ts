@@ -66,7 +66,7 @@ async function main() {
         paused: bool(row.paused),
         pausedReason: row.pausedReason ? String(row.pausedReason) : null,
         accountTier: String(row.accountTier ?? "paid"),
-        timezone: String(row.timezone ?? "Asia/Kolkata"),
+        timezone: String(row.timezone ?? "UTC"),
         workStartHour: int(row.workStartHour, 9),
         workEndHour: int(row.workEndHour, 18),
         workDays: String(row.workDays ?? "1,2,3,4,5"),

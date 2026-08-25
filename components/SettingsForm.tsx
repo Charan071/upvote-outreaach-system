@@ -211,6 +211,7 @@ export function SettingsForm({
       <label>
         Timezone
         <input value={form.timezone} onChange={(e) => patch({ timezone: e.target.value })} />
+        <span className="muted cap-remaining">Working hours and invite spacing use this zone. Default is UTC.</span>
       </label>
       <div className="row">
         <label>

@@ -42,8 +42,9 @@ export async function getSettings() {
   const dayRollover = !row.windowStart || row.windowStart < today;
   const oldJitter = row.minJitterSec === 45 && row.maxJitterSec === 120;
   const badWorkHours = row.workStartHour === 0 && row.workEndHour === 24;
+  const migrateToUtc = row.timezone === "Asia/Kolkata";
 
-  if (dayRollover || weekElapsed || oldJitter || badWorkHours) {
+  if (dayRollover || weekElapsed || oldJitter || badWorkHours || migrateToUtc) {
     return prisma.settings.update({
       where: { id: "default" },
       data: {
@@ -62,6 +63,7 @@ export async function getSettings() {
           ? { minJitterSec: UNIPILE_LINKEDIN.minJitterSec, maxJitterSec: UNIPILE_LINKEDIN.maxJitterSec }
           : {}),
         ...(badWorkHours ? { workStartHour: 9, workEndHour: 18 } : {}),
+        ...(migrateToUtc ? { timezone: "UTC" } : {}),
       },
     });
   }
@@ -73,7 +75,7 @@ export function asLimitSettings(row: Awaited<ReturnType<typeof getSettings>>): L
   const jitter = clampJitter(row.minJitterSec, row.maxJitterSec);
   return {
     accountTier: row.accountTier === "free" ? "free" : "paid",
-    timezone: row.timezone || "Asia/Kolkata",
+    timezone: row.timezone || "UTC",
     workStartHour: row.workStartHour,
     workEndHour: row.workEndHour,
     workDays: row.workDays || "1,2,3,4,5",

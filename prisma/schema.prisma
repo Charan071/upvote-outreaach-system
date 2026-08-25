@@ -90,7 +90,7 @@ model Settings {
   paused            Boolean   @default(false)
   pausedReason      String?
   accountTier       String    @default("paid")
-  timezone          String    @default("Asia/Kolkata")
+  timezone          String    @default("UTC")
   workStartHour     Int       @default(9)
   workEndHour       Int       @default(18)
   workDays          String    @default("1,2,3,4,5")

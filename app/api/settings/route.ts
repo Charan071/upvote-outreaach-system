@@ -31,7 +31,7 @@ export async function PUT(req: Request) {
     paused: Boolean(body?.paused),
     pausedReason: body?.paused ? undefined : null,
     accountTier,
-    timezone: String(body?.timezone || "Asia/Kolkata"),
+    timezone: String(body?.timezone || "UTC"),
     workStartHour,
     workEndHour,
     workDays: String(body?.workDays || "1,2,3,4,5"),
