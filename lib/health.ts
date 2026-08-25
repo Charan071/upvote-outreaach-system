@@ -6,6 +6,7 @@ import {
   clampWeeklyInviteCap,
   remaining,
 } from "./limits";
+import { defaultTemplate } from "./template";
 import { getLinkedInAccount, isOurUnipileAccount, linkedInAccountConfigured, UnipileError } from "./unipile";
 
 export type AccountHealth =
@@ -31,6 +32,14 @@ export function healthTone(health: AccountHealth): "good" | "warn" | "bad" | "ac
 
 export function healthLabel(health: AccountHealth) {
   return health.replaceAll("_", " ");
+}
+
+async function ensureSettings() {
+  await prisma.settings.upsert({
+    where: { id: "default" },
+    create: { id: "default", defaultTemplate: defaultTemplate() },
+    update: {},
+  });
 }
 
 export function deriveAccountHealth(input: {
@@ -128,6 +137,7 @@ export function startCampaignBlock(input: {
 }
 
 export async function recordLinkedInFailure(error: unknown, opts?: { pause?: boolean; pausedReason?: string }) {
+  await ensureSettings();
   const message = error instanceof Error ? error.message : String(error);
   await prisma.settings.update({
     where: { id: "default" },
@@ -146,6 +156,7 @@ export async function recordLinkedInFailure(error: unknown, opts?: { pause?: boo
 
 export async function applyUnipileStatus(status: string, accountId?: string) {
   if (!isOurUnipileAccount(accountId)) return false;
+  await ensureSettings();
   await prisma.settings.update({
     where: { id: "default" },
     data: {
@@ -158,6 +169,7 @@ export async function applyUnipileStatus(status: string, accountId?: string) {
 }
 
 export async function syncUnipileStatus() {
+  await ensureSettings();
   if (!linkedInAccountConfigured()) {
     await prisma.settings.update({
       where: { id: "default" },
