@@ -9,92 +9,124 @@ import { LocalTime } from "@/components/LocalTime";
 
 export const dynamic = "force-dynamic";
 
+function whenLabel(row: {
+  sendStatus: string;
+  sentAt: Date | null;
+  runAfter: Date;
+}) {
+  if (row.sendStatus === "sent" && row.sentAt) {
+    return <LocalTime at={row.sentAt} mode="datetime" />;
+  }
+  if (row.sendStatus === "queued" || row.sendStatus === "sending") {
+    return <LocalTime at={row.runAfter} mode="datetime" />;
+  }
+  return null;
+}
+
 export default async function ContactDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const contact = await prisma.contact.findUnique({
     where: { id },
     include: {
-      campaignContacts: { include: { campaign: true }, orderBy: { sentAt: "desc" } },
+      campaignContacts: {
+        include: { campaign: true },
+        orderBy: [{ runAfter: "desc" }, { sentAt: "desc" }],
+      },
       messages: { include: { classification: true }, orderBy: { receivedAt: "desc" } },
     },
   });
   if (!contact) notFound();
 
+  const displayName = contact.firstName
+    ? `${contact.firstName} ${contact.lastName ?? ""}`.trim()
+    : contact.linkedinSlug;
+  const meta = [contact.productName, contact.company].filter(Boolean).join(" · ");
+
   return (
     <>
       <PageHeader
         kicker="Contact"
-        title={contact.firstName ? `${contact.firstName} ${contact.lastName ?? ""}` : contact.linkedinSlug}
-        actions={contact.enrichStatus === "failed" ? <RetryEnrichButton id={contact.id} /> : null}
+        title={displayName}
+        actions={
+          <div className="actions contact-header-actions">
+            <StatusBadge status={contactStatus(contact)} />
+            {contact.enrichStatus === "failed" ? <RetryEnrichButton id={contact.id} /> : null}
+          </div>
+        }
       />
-      <div className="detail-grid">
-      <section className="panel stack">
-        <p>
-          <a href={contact.linkedinUrl} target="_blank" rel="noreferrer">
-            <Icon name="user" size={14} /> {contact.linkedinUrl}
+
+      <div className="detail-grid contact-detail">
+        <section className="panel stack contact-identity">
+          <a className="contact-linkedin" href={contact.linkedinUrl} target="_blank" rel="noreferrer">
+            <Icon name="user" size={14} />
+            <span>linkedin.com/in/{contact.linkedinSlug}</span>
           </a>
-        </p>
-        <p className="muted">{contact.headline || "No headline yet"}</p>
-        {contact.productName ? <p>Launch: {contact.productName}</p> : null}
-        {contact.company ? (
-          <p>
-            <Icon name="building" size={14} /> {contact.company}
-            {contact.companyDomain ? ` · ${contact.companyDomain}` : ""}
-          </p>
-        ) : null}
-        {contact.contextSnippet ? <p className="muted">{contact.contextSnippet}</p> : null}
-        {contact.enrichError ? <p className="warn-text">{contact.enrichError}</p> : null}
-        <p><StatusBadge status={contactStatus(contact)} /></p>
-      </section>
-      <div>
+          {contact.headline ? <p className="contact-headline">{contact.headline}</p> : (
+            <p className="muted">No headline yet</p>
+          )}
+          {meta ? (
+            <p className="contact-meta">
+              <Icon name="building" size={14} />
+              {meta}
+              {contact.companyDomain ? ` · ${contact.companyDomain}` : ""}
+            </p>
+          ) : null}
+          {contact.contextSnippet ? <p className="muted contact-snippet">{contact.contextSnippet}</p> : null}
+          {contact.enrichError ? <p className="warn-text">{contact.enrichError}</p> : null}
+          {contact.lastOutboundAt ? (
+            <p className="muted contact-last-send">
+              Last send <LocalTime at={contact.lastOutboundAt} mode="datetime" />
+            </p>
+          ) : null}
+        </section>
 
-      <h2>Campaign history</h2>
-      {contact.campaignContacts.length === 0 ? (
-        <p className="muted">No campaigns yet.</p>
-      ) : (
-        <div className="table-wrap">
-          <table>
-            <thead>
-              <tr><th>Campaign</th><th>Message</th><th>Status</th><th>Send at</th></tr>
-            </thead>
-            <tbody>
-              {contact.campaignContacts.map((row) => (
-                <tr key={row.id}>
-                  <td><Link href={`/campaigns/${row.campaignId}`}>{row.campaign.name}</Link></td>
-                  <td className="queued-note-locked">{row.renderedMessage}</td>
-                  <td><StatusBadge status={row.sendStatus} /></td>
-                  <td className="muted">
-                    {row.sendStatus === "sent" && row.sentAt ? (
-                      <LocalTime at={row.sentAt} mode="datetime" />
-                    ) : row.sendStatus === "queued" || row.sendStatus === "sending" ? (
-                      <LocalTime at={row.runAfter} />
-                    ) : (
-                      "—"
-                    )}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+        <div className="contact-outreach stack">
+          <section className="stack">
+            <h2>Outreach</h2>
+            {contact.campaignContacts.length === 0 ? (
+              <p className="muted">Not in a campaign yet.</p>
+            ) : (
+              <div className="stack contact-outreach-list">
+                {contact.campaignContacts.map((row) => {
+                  const when = whenLabel(row);
+                  return (
+                    <article key={row.id} className="panel contact-outreach-card">
+                      <div className="contact-outreach-top">
+                        <div className="contact-outreach-title">
+                          <Link href={`/campaigns/${row.campaignId}`}>{row.campaign.name}</Link>
+                          <StatusBadge status={row.sendStatus} />
+                        </div>
+                        {when ? <p className="muted contact-outreach-when">{when}</p> : null}
+                        {row.error ? <p className="warn-text">{row.error}</p> : null}
+                      </div>
+                      <pre className="contact-note">{row.renderedMessage}</pre>
+                    </article>
+                  );
+                })}
+              </div>
+            )}
+          </section>
 
-      <h2 className="section-title">Inbound</h2>
-      {contact.messages.length === 0 ? (
-        <p className="muted">No replies yet.</p>
-      ) : (
-        <div className="stack">
-          {contact.messages.map((message) => (
-            <article key={message.id} className="review-card">
-              <p className="review-body">{message.body}</p>
-              <p className="muted">
-                {message.classification?.humanLabel || message.classification?.aiLabel || "Not reviewed"}
-              </p>
-            </article>
-          ))}
+          <section className="stack">
+            <h2>Inbound</h2>
+            {contact.messages.length === 0 ? (
+              <p className="muted">No replies yet.</p>
+            ) : (
+              <div className="stack">
+                {contact.messages.map((message) => (
+                  <article key={message.id} className="review-card">
+                    <p className="review-body">{message.body}</p>
+                    <p className="muted">
+                      {message.classification?.humanLabel ||
+                        message.classification?.aiLabel ||
+                        "Not reviewed"}
+                    </p>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
         </div>
-      )}
-      </div>
       </div>
     </>
   );

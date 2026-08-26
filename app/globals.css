@@ -984,6 +984,78 @@ aside.collapsed .nav-badge {
   gap: var(--space-md);
   align-items: start;
 }
+
+.contact-header-actions {
+  align-items: center;
+}
+.contact-identity {
+  position: sticky;
+  top: 16px;
+}
+.contact-linkedin {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  word-break: break-all;
+}
+.contact-headline {
+  margin: 0;
+  color: var(--ink);
+  font-size: 15px;
+  line-height: 1.45;
+}
+.contact-meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+.contact-snippet,
+.contact-last-send {
+  margin: 0;
+  font-size: 13px;
+}
+.contact-outreach-list {
+  gap: 12px;
+}
+.contact-outreach-card {
+  display: grid;
+  gap: 12px;
+  padding: 14px 16px;
+}
+.contact-outreach-top {
+  display: grid;
+  gap: 6px;
+}
+.contact-outreach-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+.contact-outreach-title a {
+  font-weight: 500;
+}
+.contact-outreach-when {
+  margin: 0;
+  font-size: 13px;
+}
+.contact-note {
+  margin: 0;
+  padding: 12px 14px;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--line);
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.45;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
 .form-narrow {
   width: min(720px, 100%);
 }
@@ -1049,6 +1121,7 @@ aside.collapsed .nav-badge {
   .add-people-grid,
   .settings-grid,
   .detail-grid { grid-template-columns: 1fr; }
+  .contact-identity { position: static; }
   .import-or { justify-content: center; }
   h1 {
     font-size: 24px;
