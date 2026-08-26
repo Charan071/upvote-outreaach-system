@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-26T07:30:00.000Z",
-  "note": "Product Hunt product slugs already browser-scraped for makers → LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
+  "updatedAt": "2026-08-26T10:58:31.000Z",
+  "note": "Product Hunt product slugs already browser-scraped for makers \u2192 LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
   "products": [
     {
       "slug": "akta-pro",
@@ -48,6 +48,174 @@
       "slug": "choclift-workflow-sweetener",
       "scrapedAt": "2026-08-26T07:28:00.000Z",
       "linkedinFound": 2
+    },
+    {
+      "slug": "expertise-ai",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 3,
+      "productUrl": "https://www.producthunt.com/products/expertise-ai",
+      "day": "today"
+    },
+    {
+      "slug": "tellie-2",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/tellie-2",
+      "day": "today"
+    },
+    {
+      "slug": "viktor",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/viktor",
+      "day": "today"
+    },
+    {
+      "slug": "evidence",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/evidence",
+      "day": "today"
+    },
+    {
+      "slug": "lore-machine",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/lore-machine",
+      "day": "today"
+    },
+    {
+      "slug": "hevn-u-s-accounts-for-non-us-companies",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 2,
+      "productUrl": "https://www.producthunt.com/products/hevn-u-s-accounts-for-non-us-companies",
+      "day": "today"
+    },
+    {
+      "slug": "easyswitch",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/easyswitch",
+      "day": "today"
+    },
+    {
+      "slug": "loupekit",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/loupekit",
+      "day": "today"
+    },
+    {
+      "slug": "basedash",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/basedash",
+      "day": "today"
+    },
+    {
+      "slug": "baudbuddy-serial-terminal",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/baudbuddy-serial-terminal",
+      "day": "today"
+    },
+    {
+      "slug": "mcp-builder-ai",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/mcp-builder-ai",
+      "day": "today"
+    },
+    {
+      "slug": "playcall",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/playcall",
+      "day": "today"
+    },
+    {
+      "slug": "warren-5",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/warren-5",
+      "day": "today"
+    },
+    {
+      "slug": "diet-claude",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/diet-claude",
+      "day": "yesterday"
+    },
+    {
+      "slug": "agnost-ai",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/agnost-ai",
+      "day": "yesterday"
+    },
+    {
+      "slug": "coolplugz",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/coolplugz",
+      "day": "yesterday"
+    },
+    {
+      "slug": "ninjo-ai",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/ninjo-ai",
+      "day": "yesterday"
+    },
+    {
+      "slug": "particle-studio",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/particle-studio",
+      "day": "yesterday"
+    },
+    {
+      "slug": "nimbia",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/nimbia",
+      "day": "yesterday"
+    },
+    {
+      "slug": "memoria-5",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/memoria-5",
+      "day": "yesterday"
+    },
+    {
+      "slug": "agent-card",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/agent-card",
+      "day": "yesterday"
+    },
+    {
+      "slug": "electronic-materials-office-altar-i",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/electronic-materials-office-altar-i",
+      "day": "yesterday"
+    },
+    {
+      "slug": "flare-11",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/flare-11",
+      "day": "yesterday"
+    },
+    {
+      "slug": "dockduck",
+      "scrapedAt": "2026-08-26T10:58:31.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/dockduck",
+      "day": "yesterday"
     }
   ]
 }
