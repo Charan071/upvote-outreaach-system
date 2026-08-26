@@ -25,6 +25,7 @@ type IncomingContact = {
   enrichError?: string | null;
   outreachStatus?: string;
   poolStatus?: string;
+  lastOutboundAt?: string | null;
   productName?: string | null;
   source?: string;
 };
@@ -34,7 +35,8 @@ type IncomingContact = {
  * Auth: Authorization: Bearer $CRON_SECRET
  * Body: { contacts: IncomingContact[] }
  *
- * Skips already-invited people. Queued-but-unsent become never (no campaign on Railway yet).
+ * Preserves invite-sent statuses. Queued-but-unsent become never
+ * (no campaign rows migrated).
  */
 export async function POST(req: Request) {
   if (!authorized(req)) {
@@ -49,25 +51,30 @@ export async function POST(req: Request) {
 
   let created = 0;
   let updated = 0;
-  let skippedInvited = 0;
   let skippedInvalid = 0;
+  const byOutreach: Record<string, number> = {};
 
   for (const row of rows) {
-    const outreach = String(row.outreachStatus || "never");
-    if (["invited", "connected", "messaged"].includes(outreach)) {
-      skippedInvited += 1;
-      continue;
-    }
-
     const normalized = normalizeLinkedInUrl(row.linkedinUrl || row.linkedinSlug || "");
     if (!normalized) {
       skippedInvalid += 1;
       continue;
     }
 
-    // Unsent queue on Render had no Railway campaign — reset to never so they can be queued again.
-    const outreachStatus = outreach === "queued" ? "never" : outreach === "never" ? "never" : "never";
-    const enrichStatus = row.enrichStatus === "ready" ? "ready" : row.enrichStatus === "failed" ? "failed" : "pending";
+    const rawOutreach = String(row.outreachStatus || "never");
+    // Unsent queue had no Railway campaign — reset so they can be re-queued.
+    // Already sent (invited/connected/messaged) keep their status.
+    const outreachStatus =
+      rawOutreach === "queued"
+        ? "never"
+        : ["invited", "connected", "messaged", "never"].includes(rawOutreach)
+          ? rawOutreach
+          : "never";
+
+    const enrichStatus =
+      row.enrichStatus === "ready" ? "ready" : row.enrichStatus === "failed" ? "failed" : "pending";
+
+    byOutreach[outreachStatus] = (byOutreach[outreachStatus] || 0) + 1;
 
     const data = {
       linkedinUrl: normalized.url,
@@ -83,7 +90,8 @@ export async function POST(req: Request) {
       enrichError: row.enrichError ?? null,
       outreachStatus,
       poolStatus: row.poolStatus || "none",
-      lastCampaignId: null,
+      lastCampaignId: null as string | null,
+      lastOutboundAt: row.lastOutboundAt ? new Date(row.lastOutboundAt) : null,
       productName: row.productName ?? null,
       source: row.source || "manual",
     };
@@ -101,25 +109,25 @@ export async function POST(req: Request) {
         },
       });
       updated += 1;
-    } else {
-      try {
-        await prisma.contact.create({ data });
-        created += 1;
-      } catch {
-        // Unique race on unipileProviderId — retry without it
-        await prisma.contact.create({
-          data: { ...data, unipileProviderId: null },
-        });
-        created += 1;
-      }
+      continue;
+    }
+
+    try {
+      await prisma.contact.create({ data });
+      created += 1;
+    } catch {
+      await prisma.contact.create({
+        data: { ...data, unipileProviderId: null },
+      });
+      created += 1;
     }
   }
 
   return NextResponse.json({
     created,
     updated,
-    skippedInvited,
     skippedInvalid,
-    note: "Queued Render contacts were reset to outreachStatus=never (no campaign migrated).",
+    byOutreach,
+    note: "queued→never (no campaign migrated). invited/connected/messaged kept.",
   });
 }
