@@ -57,7 +57,11 @@ export function StatusBadge({ status }: { status: string }) {
   const tone =
     status === "ready" || status === "sent" || status === "positive" || status === "running"
       ? "good"
-      : status === "failed" || status === "excluded" || status === "stop" || status === "decline"
+      : status === "failed" ||
+          status === "enrich_failed" ||
+          status === "excluded" ||
+          status === "stop" ||
+          status === "decline"
         ? "bad"
         : status === "pending" || status === "pending_review" || status === "queued" || status === "paused" || status === "draft"
           ? "warn"

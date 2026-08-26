@@ -11,7 +11,8 @@ export const REVIEW_LABELS = [
 const LABELS: Record<string, string> = {
   pending: "Needs name",
   ready: "Ready",
-  failed: "Lookup failed",
+  failed: "Failed",
+  enrich_failed: "Lookup failed",
   never: "Not contacted",
   queued: "Queued",
   sending: "Sending",
@@ -50,7 +51,7 @@ export function contactStatus(contact: {
   outreachStatus: string;
   poolStatus: string;
 }) {
-  if (contact.enrichStatus === "failed") return "failed";
+  if (contact.enrichStatus === "failed") return "enrich_failed";
   if (contact.enrichStatus === "pending") return "pending";
   if (contact.poolStatus === "pending_review") return "pending_review";
   if (contact.poolStatus === "excluded") return "excluded";

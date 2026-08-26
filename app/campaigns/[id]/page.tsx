@@ -87,38 +87,45 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
         }
       />
       <div className="table-wrap">
-        <table>
+        <table className="campaign-people-table">
           <thead>
-              <tr>
+            <tr>
               <th>Person</th>
-              <th>Preview</th>
               <th>Status</th>
-              <th>Send at</th>
-              <th>Error</th>
+              <th>When</th>
             </tr>
           </thead>
           <tbody>
-            {campaign.contacts.map((row) => (
-              <tr key={row.id}>
-                <td>
-                  <Link href={`/contacts/${row.contactId}`}>
-                    {row.contact.firstName || row.contact.linkedinSlug}
-                  </Link>
-                </td>
-                <td className="queued-note-locked">{row.renderedMessage}</td>
-                <td><StatusBadge status={row.sendStatus} /></td>
-                <td className="muted">
-                  {row.sendStatus === "sent" && row.sentAt ? (
-                    <LocalTime at={row.sentAt} mode="datetime" />
-                  ) : row.sendStatus === "queued" || row.sendStatus === "sending" ? (
-                    <LocalTime at={row.runAfter} />
-                  ) : (
-                    "—"
-                  )}
-                </td>
-                <td className="muted">{row.error || ""}</td>
-              </tr>
-            ))}
+            {campaign.contacts.map((row) => {
+              const when =
+                row.sendStatus === "sent" && row.sentAt ? (
+                  <LocalTime at={row.sentAt} mode="datetime" />
+                ) : row.sendStatus === "queued" || row.sendStatus === "sending" ? (
+                  <LocalTime at={row.runAfter} mode="datetime" />
+                ) : null;
+              const shortError =
+                row.error && (row.sendStatus === "failed" || row.sendStatus === "skipped")
+                  ? row.error.replace(/^Unipile \d+:\s*/i, "").trim()
+                  : null;
+              return (
+                <tr key={row.id}>
+                  <td>
+                    <Link href={`/contacts/${row.contactId}`}>
+                      {row.contact.firstName || row.contact.linkedinSlug}
+                    </Link>
+                  </td>
+                  <td className="campaign-status-cell">
+                    <StatusBadge status={row.sendStatus} />
+                    {shortError ? (
+                      <p className="campaign-row-error" title={row.error || shortError}>
+                        {shortError}
+                      </p>
+                    ) : null}
+                  </td>
+                  <td className="muted when-cell">{when ?? "—"}</td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

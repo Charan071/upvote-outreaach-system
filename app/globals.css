@@ -1056,6 +1056,30 @@ aside.collapsed .nav-badge {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+.campaign-people-table th:nth-child(2),
+.campaign-people-table td:nth-child(2) {
+  width: 40%;
+}
+.campaign-people-table th:nth-child(3),
+.campaign-people-table .when-cell {
+  width: 11rem;
+  white-space: nowrap;
+}
+.campaign-status-cell {
+  vertical-align: top;
+}
+.campaign-row-error {
+  margin: 6px 0 0;
+  max-width: 28rem;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
 .form-narrow {
   width: min(720px, 100%);
 }
