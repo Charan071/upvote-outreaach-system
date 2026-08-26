@@ -4,7 +4,8 @@ import { getSettings } from "@/lib/queue";
 import { ImportForm } from "@/components/ImportForm";
 import { DiscoverPhButton } from "@/components/DiscoverPhButton";
 import { NextStep } from "@/components/NextStep";
-import { Icon, IconLabel } from "@/components/icons";
+import { ReadyInviteActions } from "@/components/ReadyInviteActions";
+import { Icon } from "@/components/icons";
 import { Empty, PageHeader, Stat, StatusBadge } from "@/components/ui";
 import { contactStatus } from "@/lib/status";
 import { LocalTime } from "@/components/LocalTime";
@@ -110,13 +111,7 @@ export default async function ContactsPage({
       <PageHeader
         kicker="Audience"
         title="Contacts"
-        actions={
-          readyToInvite > 0 ? (
-            <Link className="btn" href="/campaigns/new">
-              <IconLabel name="send">Write invite</IconLabel>
-            </Link>
-          ) : null
-        }
+        actions={<ReadyInviteActions readyCount={readyToInvite} />}
       />
       <div className="stats">
         <Stat value={total} label="People" icon="pool" />

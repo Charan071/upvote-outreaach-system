@@ -759,6 +759,29 @@ tr:last-child td { border-bottom: 0; }
   white-space: nowrap;
 }
 
+.ready-invite-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+}
+.ready-invite-menu {
+  min-width: min(360px, 80vw);
+  margin: 0;
+  padding: 14px 16px;
+}
+.ready-invite-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+.ready-invite-list .btn-link {
+  text-align: left;
+  width: 100%;
+}
+
 .badge {
   display: inline-flex;
   align-items: center;
