@@ -1,0 +1,14 @@
+---
+description: Product Hunt browser scrape — skip already-visited products
+alwaysApply: true
+---
+
+# Product Hunt browser scrape
+
+When scraping Product Hunt (Playwright / browser) for makers → LinkedIn URLs:
+
+1. **Read** `data/scraped-ph-products.json` first. Do **not** open `/products/{slug}` or `/products/{slug}/makers` for any slug already in `products`.
+2. **Before import**, GET live `/api/contacts` (or rely on import dedupe) so existing LinkedIn `/in/` URLs are not treated as new work.
+3. **After** visiting a product (even if zero LinkedIn links), append `{ "slug", "scrapedAt", "linkedinFound" }` to that file and bump `updatedAt`.
+4. Prefer **new** homepage / leaderboard launches whose slugs are not in the log.
+5. Context.dev daily collect is separate — this rule is only for browser scrapes of PH pages.

@@ -1,0 +1,53 @@
+{
+  "updatedAt": "2026-08-26T07:30:00.000Z",
+  "note": "Product Hunt product slugs already browser-scraped for makers → LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
+  "products": [
+    {
+      "slug": "akta-pro",
+      "scrapedAt": "2026-08-25T23:21:00.000Z",
+      "linkedinFound": 4,
+      "note": "Neeraj, Shiv, Bharat, Saswat (Siddhant had no LinkedIn)"
+    },
+    {
+      "slug": "reweaver-driftdetector",
+      "scrapedAt": "2026-08-26T07:28:00.000Z",
+      "linkedinFound": 0,
+      "note": "Makers page visited; no makers extracted"
+    },
+    {
+      "slug": "ify-2",
+      "scrapedAt": "2026-08-26T07:28:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "x1-2",
+      "scrapedAt": "2026-08-26T07:28:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "knack",
+      "scrapedAt": "2026-08-26T07:28:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "arena-5",
+      "scrapedAt": "2026-08-26T07:28:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "screenify-studio",
+      "scrapedAt": "2026-08-26T07:28:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "termy-language-learning",
+      "scrapedAt": "2026-08-26T07:28:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "choclift-workflow-sweetener",
+      "scrapedAt": "2026-08-26T07:28:00.000Z",
+      "linkedinFound": 2
+    }
+  ]
+}
