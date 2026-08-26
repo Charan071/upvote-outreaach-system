@@ -1,0 +1,18 @@
+---
+description: Railway hosting for this Launchlist repo only
+alwaysApply: true
+---
+
+# Railway — this project only
+
+Launchlist (`upvote-outreaach-system`) deploys to **its own** Railway project/account.
+
+- Railway account: **kbkjain89@gmail.com** (this project only — not other Charan workspaces).
+- Railway project: **spirited-reverence** (`fcc69ecb-f1a7-4df0-8132-2e4277b29c85`).
+- App service: **Lunchlist** / upvote-outreaach-system (`edb3b9b5-838f-4400-aaf6-8c7479dc04ff`), env **production**.
+- Postgres service: **Postgres** (`4f820a5d-1a77-491c-957e-9824c4b4939a`).
+- Public URL: **https://lunchlist.up.railway.app**
+- Unipile webhook: **https://lunchlist.up.railway.app/api/webhooks/unipile**
+- GitHub source: `Charan071/upvote-outreaach-system`.
+- Do **not** use the local Railway CLI if it is logged into a different account (e.g. aixccelerate). Prefer MCP authenticated to kbkjain89@gmail.com.
+- Render (`upvote-outreaach-system.onrender.com`) is the old host; prefer Railway after cutover.
