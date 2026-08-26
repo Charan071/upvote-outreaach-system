@@ -5,11 +5,18 @@ import {
   startChat,
   isLinkedInLimitError,
   isAlreadyConnectedError,
-  UnipileError,
+  isAlreadyInvitedError,
+  hasPendingSentInvitation,
+  clearSentInvitationCache,
 } from "./unipile";
 import { enrichContact } from "./enrich";
 import { isDisconnectedStatus, recordLinkedInFailure, syncUnipileStatus } from "./health";
-import { ALREADY_CONNECTED_ERROR, shouldSkipInvite } from "./connected";
+import {
+  ALREADY_CONNECTED_ERROR,
+  ALREADY_INVITED_ERROR,
+  markInvitedAndSkipJobs,
+  shouldSkipInvite,
+} from "./connected";
 import {
   UNIPILE_LINKEDIN,
   clampInviteDailyCap,
@@ -263,11 +270,22 @@ export async function tickQueue() {
 
       let unipileId: string | undefined;
       if (job.campaign.kind === "invite") {
+        const alreadyPending = await hasPendingSentInvitation({
+          providerId,
+          linkedinSlug: job.contact.linkedinSlug,
+        });
+        if (alreadyPending) {
+          await markInvitedAndSkipJobs(job.contactId, now);
+          await spreadQueuedJobs();
+          return { processed: 1, reason: "skipped" as const, contactId: job.contactId };
+        }
+
         const result = (await sendInvitation(providerId, job.renderedMessage)) as {
           invitation_id?: string;
           id?: string;
         };
         unipileId = result.invitation_id ?? result.id;
+        clearSentInvitationCache();
       } else {
         const result = (await startChat(providerId, job.renderedMessage)) as { id?: string };
         unipileId = result.id;
@@ -324,16 +342,25 @@ export async function tickQueue() {
         await spreadQueuedJobs();
         return { processed: 1, reason: "skipped" as const, contactId: job.contactId };
       }
+      if (job.campaign.kind === "invite" && isAlreadyInvitedError(error)) {
+        await markInvitedAndSkipJobs(job.contactId, now);
+        await prisma.campaignContact.update({
+          where: { id: job.id },
+          data: { sendStatus: "skipped", error: ALREADY_INVITED_ERROR, sentAt: now },
+        }).catch(() => null);
+        clearSentInvitationCache();
+        await spreadQueuedJobs();
+        return { processed: 1, reason: "skipped" as const, contactId: job.contactId };
+      }
       await prisma.campaignContact.update({
         where: { id: job.id },
         data: { sendStatus: "failed", error: message },
       });
       if (isLinkedInLimitError(error)) {
-        const type = error instanceof UnipileError ? error.type : "";
-        const pausedReason = /cannot_resend/i.test(`${type} ${message}`)
-          ? "LinkedIn invitation limit (422 cannot_resend_yet). Same cap as the LinkedIn UI. Remaining invites were pushed later."
-          : "LinkedIn returned 429/500. Sending paused to avoid automation warnings.";
-        await recordLinkedInFailure(error, { pause: true, pausedReason });
+        await recordLinkedInFailure(error, {
+          pause: true,
+          pausedReason: "LinkedIn returned 429/500. Sending paused to avoid automation warnings.",
+        });
         await spreadQueuedJobs();
       } else {
         await recordLinkedInFailure(error);

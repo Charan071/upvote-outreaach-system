@@ -98,6 +98,13 @@ export default async function ContactsPage({
     ).map((row) => [row.contactId, row.runAfter]),
   );
 
+  function whenFor(contact: (typeof contacts)[number]) {
+    const scheduled = sendAtByContact.get(contact.id);
+    if (scheduled) return scheduled;
+    if (contact.lastOutboundAt) return contact.lastOutboundAt;
+    return null;
+  }
+
   return (
     <>
       <PageHeader
@@ -163,38 +170,38 @@ export default async function ContactsPage({
           />
         ) : (
           <div className="table-wrap">
-            <table>
+            <table className="contacts-table">
               <thead>
                 <tr>
                   <th>Person</th>
-                  <th>Launch</th>
-                  <th>Company</th>
-                  <th>Headline</th>
                   <th>Status</th>
-                  <th>Send at</th>
+                  <th>When</th>
                 </tr>
               </thead>
               <tbody>
-                {contacts.map((contact) => (
-                  <tr key={contact.id}>
-                    <td>
-                      <Link href={`/contacts/${contact.id}`}>
-                        {contact.firstName ? `${contact.firstName} ${contact.lastName ?? ""}` : contact.linkedinSlug}
-                      </Link>
-                    </td>
-                    <td className="muted">{contact.productName || "—"}</td>
-                    <td className="muted">{contact.company || "—"}</td>
-                    <td className="muted">{contact.headline || "—"}</td>
-                    <td><StatusBadge status={contactStatus(contact)} /></td>
-                    <td className="muted">
-                      {sendAtByContact.get(contact.id) ? (
-                        <LocalTime at={sendAtByContact.get(contact.id)!} />
-                      ) : (
-                        "—"
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                {contacts.map((contact) => {
+                  const meta = [contact.productName, contact.company].filter(Boolean).join(" · ");
+                  const when = whenFor(contact);
+                  return (
+                    <tr key={contact.id}>
+                      <td className="person-cell">
+                        <Link href={`/contacts/${contact.id}`}>
+                          {contact.firstName
+                            ? `${contact.firstName} ${contact.lastName ?? ""}`.trim()
+                            : contact.linkedinSlug}
+                        </Link>
+                        {contact.headline ? (
+                          <p className="person-headline">{contact.headline}</p>
+                        ) : null}
+                        {meta ? <p className="person-meta">{meta}</p> : null}
+                      </td>
+                      <td><StatusBadge status={contactStatus(contact)} /></td>
+                      <td className="muted when-cell">
+                        {when ? <LocalTime at={when} mode="datetime" /> : "—"}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

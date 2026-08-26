@@ -120,22 +120,108 @@ export async function getLinkedInAccount(): Promise<{ id: string; status: string
   return { id: data.id || accountId, status };
 }
 
+/** True only for hard LinkedIn/Unipile rate limits that should pause sending. */
 export function isLinkedInLimitError(error: unknown) {
+  if (isAlreadyInvitedError(error) || isAlreadyConnectedError(error)) return false;
   const message = error instanceof Error ? error.message : String(error);
   const type = error instanceof UnipileError ? error.type : "";
   const status = error instanceof UnipileError ? error.status : 0;
-  return (
-    status === 422 ||
-    status === 429 ||
-    status === 500 ||
-    /cannot_resend|restriction|limit|too many/i.test(`${type} ${message}`)
-  );
+  const blob = `${type} ${message}`;
+  if (status === 429 || status === 500) return true;
+  return /cannot_resend_yet|rate.?limit|too many|restriction|temporarily.?throttl/i.test(blob);
 }
 
 export function isAlreadyConnectedError(error: unknown) {
   const message = error instanceof Error ? error.message : String(error);
   const type = error instanceof UnipileError ? error.type : "";
   return /already.?connect|already.?relation|first_degree/i.test(`${type} ${message}`);
+}
+
+/** Pending invite already exists for this recipient — skip, do not pause. */
+export function isAlreadyInvitedError(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  const type = error instanceof UnipileError ? error.type : "";
+  const blob = `${type} ${message}`;
+  return (
+    /already been sent|invitation has already been sent|already.?invited|pending.?invitation/i.test(blob) ||
+    (/cannot_resend/i.test(blob) && /recipient|already/i.test(blob))
+  );
+}
+
+type SentInvitation = {
+  id?: string;
+  invited_user_id?: string | null;
+  invited_user_public_id?: string | null;
+};
+
+type SentInvitationCache = {
+  expiresAt: number;
+  byProviderId: Set<string>;
+  byPublicId: Set<string>;
+};
+
+let sentInvitationCache: SentInvitationCache | null = null;
+const SENT_INVITE_CACHE_MS = 5 * 60 * 1000;
+
+function normalizePublicId(value: string | null | undefined) {
+  return String(value || "")
+    .trim()
+    .toLowerCase()
+    .replace(/^https?:\/\/(www\.)?linkedin\.com\/in\//i, "")
+    .replace(/\/+$/, "");
+}
+
+export async function listSentInvitations(opts?: { force?: boolean }): Promise<SentInvitationCache> {
+  const now = Date.now();
+  if (!opts?.force && sentInvitationCache && sentInvitationCache.expiresAt > now) {
+    return sentInvitationCache;
+  }
+
+  const { accountId } = config();
+  const byProviderId = new Set<string>();
+  const byPublicId = new Set<string>();
+  let cursor: string | undefined;
+
+  for (let page = 0; page < 10; page += 1) {
+    const params = new URLSearchParams({
+      account_id: accountId,
+      limit: "100",
+    });
+    if (cursor) params.set("cursor", cursor);
+    const data = (await unipileFetch(`/api/v1/users/invite/sent?${params}`)) as {
+      items?: SentInvitation[];
+      cursor?: string | null;
+    };
+    for (const item of data.items || []) {
+      if (item.invited_user_id) byProviderId.add(String(item.invited_user_id));
+      const publicId = normalizePublicId(item.invited_user_public_id);
+      if (publicId) byPublicId.add(publicId);
+    }
+    cursor = data.cursor || undefined;
+    if (!cursor) break;
+  }
+
+  sentInvitationCache = {
+    expiresAt: now + SENT_INVITE_CACHE_MS,
+    byProviderId,
+    byPublicId,
+  };
+  return sentInvitationCache;
+}
+
+export async function hasPendingSentInvitation(input: {
+  providerId?: string | null;
+  linkedinSlug?: string | null;
+}) {
+  const cache = await listSentInvitations();
+  if (input.providerId && cache.byProviderId.has(input.providerId)) return true;
+  const slug = normalizePublicId(input.linkedinSlug);
+  if (slug && cache.byPublicId.has(slug)) return true;
+  return false;
+}
+
+export function clearSentInvitationCache() {
+  sentInvitationCache = null;
 }
 
 export async function getLinkedInProfile(slug: string): Promise<{

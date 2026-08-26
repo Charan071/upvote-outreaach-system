@@ -44,3 +44,32 @@ export async function markConnectedAndSkipInvites(contactId: string) {
   }
   return skipQueuedInviteJobs(contactId);
 }
+
+export const ALREADY_INVITED_ERROR = "Invite already pending";
+
+export async function markInvitedAndSkipJobs(contactId: string, sentAt = new Date()) {
+  const contact = await prisma.contact.findUnique({ where: { id: contactId } });
+  if (!contact) return 0;
+  if (contact.outreachStatus === "never" || contact.outreachStatus === "queued") {
+    await prisma.contact.update({
+      where: { id: contactId },
+      data: {
+        outreachStatus: "invited",
+        lastOutboundAt: contact.lastOutboundAt ?? sentAt,
+      },
+    });
+  }
+  const result = await prisma.campaignContact.updateMany({
+    where: {
+      contactId,
+      sendStatus: { in: ["queued", "sending"] },
+      campaign: { kind: "invite" },
+    },
+    data: {
+      sendStatus: "skipped",
+      error: ALREADY_INVITED_ERROR,
+      sentAt: contact.lastOutboundAt ?? sentAt,
+    },
+  });
+  return result.count;
+}
