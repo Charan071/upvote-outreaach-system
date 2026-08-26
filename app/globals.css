@@ -1018,6 +1018,11 @@ aside.collapsed .nav-badge {
   margin: 0;
   font-size: 13px;
 }
+.contact-product-link {
+  display: inline-flex;
+  align-items: center;
+  font-size: 13px;
+}
 .contact-outreach-list {
   gap: 12px;
 }

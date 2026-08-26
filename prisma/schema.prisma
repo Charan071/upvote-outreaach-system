@@ -25,6 +25,7 @@ model Contact {
   lastCampaignId    String?
   lastOutboundAt    DateTime?
   productName       String?
+  productUrl        String?
   source            String   @default("manual")
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt

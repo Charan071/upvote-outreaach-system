@@ -71,6 +71,11 @@ export default async function ContactDetailPage({ params }: { params: Promise<{ 
               {contact.companyDomain ? ` · ${contact.companyDomain}` : ""}
             </p>
           ) : null}
+          {contact.productUrl ? (
+            <a className="contact-product-link" href={contact.productUrl} target="_blank" rel="noreferrer">
+              Product Hunt · upvote when they reply
+            </a>
+          ) : null}
           {contact.contextSnippet ? <p className="muted contact-snippet">{contact.contextSnippet}</p> : null}
           {contact.enrichError ? <p className="warn-text">{contact.enrichError}</p> : null}
           {contact.lastOutboundAt ? (
