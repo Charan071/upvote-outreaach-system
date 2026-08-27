@@ -390,6 +390,7 @@ p {
   width: 100%;
 }
 .stats-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.campaign-kpis { margin: var(--space-sm) 0 var(--space-lg); }
 .stat strong:has(.badge) {
   font-size: 15px;
   letter-spacing: 0;

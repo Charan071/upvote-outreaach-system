@@ -148,7 +148,49 @@ export async function armCampaign(campaignId: string) {
     data: { status: "running" },
   });
   const scheduled = await spreadQueuedJobs(campaignId);
-  return { campaign, scheduled };
+  await completeCampaignIfDone(campaignId);
+  return { campaign: (await prisma.campaign.findUnique({ where: { id: campaignId } })) ?? campaign, scheduled };
+}
+
+/** Mark a running campaign completed when nothing is left to send. */
+export async function completeCampaignIfDone(campaignId: string) {
+  const campaign = await prisma.campaign.findUnique({
+    where: { id: campaignId },
+    select: { status: true },
+  });
+  if (!campaign || campaign.status !== "running") return false;
+
+  const remaining = await prisma.campaignContact.count({
+    where: { campaignId, sendStatus: { in: ["queued", "sending"] } },
+  });
+  if (remaining > 0) return false;
+
+  const total = await prisma.campaignContact.count({ where: { campaignId } });
+  if (total === 0) return false;
+
+  await prisma.campaign.update({
+    where: { id: campaignId },
+    data: { status: "completed" },
+  });
+  return true;
+}
+
+/** Backfill: complete every running campaign with no queued/sending work. */
+export async function completeFinishedCampaigns() {
+  const candidates = await prisma.campaign.findMany({
+    where: {
+      status: "running",
+      contacts: { some: {} },
+      NOT: { contacts: { some: { sendStatus: { in: ["queued", "sending"] } } } },
+    },
+    select: { id: true },
+  });
+  if (!candidates.length) return 0;
+  await prisma.campaign.updateMany({
+    where: { id: { in: candidates.map((row) => row.id) } },
+    data: { status: "completed" },
+  });
+  return candidates.length;
 }
 
 export async function spreadQueuedJobs(campaignId?: string) {
@@ -195,6 +237,7 @@ export async function repairQueueIfNeeded() {
 export async function tickQueue() {
   await syncUnipileStatus();
   await repairQueueIfNeeded();
+  await completeFinishedCampaigns();
   const raw = await getSettings();
   const settings = asLimitSettings(raw);
   const now = new Date();
@@ -239,7 +282,10 @@ export async function tickQueue() {
     skipped += 1;
     job = await findDueJob();
   }
-  if (skipped) await spreadQueuedJobs();
+  if (skipped) {
+    await spreadQueuedJobs();
+    await completeFinishedCampaigns();
+  }
 
   const canSendJob =
     job &&
@@ -277,6 +323,7 @@ export async function tickQueue() {
         if (alreadyPending) {
           await markInvitedAndSkipJobs(job.contactId, now);
           await spreadQueuedJobs();
+          await completeFinishedCampaigns();
           return { processed: 1, reason: "skipped" as const, contactId: job.contactId };
         }
 
@@ -325,6 +372,7 @@ export async function tickQueue() {
 
       const nextAllowedAt = await markCooldown();
       await spreadQueuedJobs();
+      await completeCampaignIfDone(job.campaignId);
       return { processed: 1, reason: "sent" as const, contactId: job.contactId, nextAllowedAt };
     } catch (error) {
       const message = error instanceof Error ? error.message : "Send failed";
@@ -340,6 +388,7 @@ export async function tickQueue() {
           });
         }
         await spreadQueuedJobs();
+        await completeCampaignIfDone(job.campaignId);
         return { processed: 1, reason: "skipped" as const, contactId: job.contactId };
       }
       if (job.campaign.kind === "invite" && isAlreadyInvitedError(error)) {
@@ -350,6 +399,7 @@ export async function tickQueue() {
         }).catch(() => null);
         clearSentInvitationCache();
         await spreadQueuedJobs();
+        await completeFinishedCampaigns();
         return { processed: 1, reason: "skipped" as const, contactId: job.contactId };
       }
       await prisma.campaignContact.update({
@@ -366,6 +416,7 @@ export async function tickQueue() {
         await recordLinkedInFailure(error);
         await markCooldown();
       }
+      await completeCampaignIfDone(job.campaignId);
       return { processed: 0, reason: "failed" as const, error: message };
     }
   }

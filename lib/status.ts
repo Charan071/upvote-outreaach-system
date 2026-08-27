@@ -28,6 +28,7 @@ const LABELS: Record<string, string> = {
   draft: "Draft",
   running: "Sending",
   paused: "Paused",
+  completed: "Done",
   invite: "Connection invites",
   message: "Follow-up messages",
   question: "Question",

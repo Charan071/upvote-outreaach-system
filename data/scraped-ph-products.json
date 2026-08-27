@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-26T10:58:31.000Z",
-  "note": "Product Hunt product slugs already browser-scraped for makers \u2192 LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
+  "updatedAt": "2026-08-27T07:55:00.000Z",
+  "note": "Product Hunt product slugs already browser-scraped for makers → LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
   "products": [
     {
       "slug": "akta-pro",
@@ -216,6 +216,334 @@
       "linkedinFound": 0,
       "productUrl": "https://www.producthunt.com/products/dockduck",
       "day": "yesterday"
+    },
+    {
+      "slug": "chatcut-ai-video-editor",
+      "scrapedAt": "2026-08-27T07:05:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/chatcut-ai-video-editor",
+      "day": "2026-08-26",
+      "note": "All filter 26/08; 5 makers, no LinkedIn"
+    },
+    {
+      "slug": "posthog",
+      "scrapedAt": "2026-08-27T07:05:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/posthog",
+      "day": "2026-08-26",
+      "note": "All filter 26/08"
+    },
+    {
+      "slug": "lightfield",
+      "scrapedAt": "2026-08-27T07:05:00.000Z",
+      "linkedinFound": 3,
+      "productUrl": "https://www.producthunt.com/products/lightfield",
+      "day": "2026-08-26",
+      "note": "All filter 26/08"
+    },
+    {
+      "slug": "opencomputer",
+      "scrapedAt": "2026-08-27T07:05:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/opencomputer",
+      "day": "2026-08-26",
+      "note": "All filter 26/08"
+    },
+    {
+      "slug": "wisprflow",
+      "scrapedAt": "2026-08-27T07:05:00.000Z",
+      "linkedinFound": 4,
+      "productUrl": "https://www.producthunt.com/products/wisprflow",
+      "day": "2026-08-26",
+      "note": "All filter 26/08"
+    },
+    {
+      "slug": "apple",
+      "scrapedAt": "2026-08-27T07:05:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/apple",
+      "day": "2026-08-26",
+      "note": "All filter 26/08; Mac mini, no maker LinkedIn"
+    },
+    {
+      "slug": "traccia",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 4,
+      "productUrl": "https://www.producthunt.com/products/traccia",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "enter-pro",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/enter-pro",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "pluto-11",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/pluto-11",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "skydive",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/skydive",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "gemini-3-5-transcribe",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/gemini-3-5-transcribe",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "yomi-3",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/yomi-3",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "speko",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/speko",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "gitnexus-akon-labs",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/gitnexus-akon-labs",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "qwen3",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/qwen3",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "spacebarx",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/spacebarx",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "iq-routing",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/iq-routing",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "z-ai",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 2,
+      "productUrl": "https://www.producthunt.com/products/z-ai",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "cobalt-10",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/cobalt-10",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "wondering-2",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/wondering-2",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "the-million-sad-ducks",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/the-million-sad-ducks",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "klamp-ai",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/klamp-ai",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "hflow",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/hflow",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "savvy-12",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/savvy-12",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "kira-art",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/kira-art",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "sendra",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/sendra",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "scran",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 2,
+      "productUrl": "https://www.producthunt.com/products/scran",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "the-ticket-fairy",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/the-ticket-fairy",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "eventually-3",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/eventually-3",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "ojin",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/ojin",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "kraa",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/kraa",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "osuite-2",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/osuite-2",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "lenz-2",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 3,
+      "productUrl": "https://www.producthunt.com/products/lenz-2",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "rule-the-world-bid-on-any-country",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/rule-the-world-bid-on-any-country",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "fleets-by-mridu",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/fleets-by-mridu",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "airtop",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/airtop",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "sarvam-stream",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/sarvam-stream",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "pagewisr",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/pagewisr",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "datagrout-ai",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/datagrout-ai",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "specpilot",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/specpilot",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
+    },
+    {
+      "slug": "tablekard",
+      "scrapedAt": "2026-08-27T07:55:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/tablekard",
+      "day": "2026-08-27",
+      "note": "All filter 27/08"
     }
   ]
 }

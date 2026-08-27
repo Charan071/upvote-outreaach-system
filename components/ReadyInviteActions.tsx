@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { IconLabel } from "@/components/icons";
+import { statusLabel } from "@/lib/status";
 
 type CampaignOption = {
   id: string;
@@ -32,7 +33,10 @@ export function ReadyInviteActions({ readyCount }: { readyCount: number }) {
           rows.filter(
             (c) =>
               c.kind === "invite" &&
-              (c.status === "running" || c.status === "paused" || c.status === "draft"),
+              (c.status === "running" ||
+                c.status === "paused" ||
+                c.status === "draft" ||
+                c.status === "completed"),
           ),
         );
       })
@@ -97,7 +101,7 @@ export function ReadyInviteActions({ readyCount }: { readyCount: number }) {
                     Add to {campaign.name}
                     <span className="muted">
                       {" "}
-                      · {campaign.status}
+                      · {statusLabel(campaign.status)}
                       {campaign._count?.contacts != null ? ` · ${campaign._count.contacts} people` : ""}
                     </span>
                   </button>

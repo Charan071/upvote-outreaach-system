@@ -3,10 +3,10 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { CampaignActions } from "@/components/CampaignActions";
 import { CampaignMessageEditor } from "@/components/CampaignMessageEditor";
-import { PageHeader, StatusBadge } from "@/components/ui";
+import { PageHeader, Stat, StatusBadge } from "@/components/ui";
 import { campaignKindLabel } from "@/lib/status";
 import { LocalHourRange, LocalTime } from "@/components/LocalTime";
-import { getSettings } from "@/lib/queue";
+import { getSettings, completeCampaignIfDone } from "@/lib/queue";
 import { formatJitterPhrase } from "@/lib/time";
 
 export const dynamic = "force-dynamic";
@@ -14,10 +14,14 @@ export const dynamic = "force-dynamic";
 export default async function CampaignDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const settings = await getSettings();
+  await completeCampaignIfDone(id);
   const campaign = await prisma.campaign.findUnique({
     where: { id },
     include: {
-      contacts: { include: { contact: true }, orderBy: { runAfter: "asc" } },
+      contacts: {
+        include: { contact: { include: { messages: { where: { direction: "in" }, take: 1 } } } },
+        orderBy: { runAfter: "asc" },
+      },
     },
   });
   if (!campaign) notFound();
@@ -30,6 +34,12 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
   const kind = campaign.kind === "message" ? "message" : "invite";
   const unit = kind === "message" ? "message" : "invite";
   const nextQueued = queuedRows[0];
+
+  const accepted = campaign.contacts.filter((c) => c.acceptedAt).length;
+  const replied = campaign.contacts.filter(
+    (c) => c.sendStatus === "sent" && c.contact.messages.length > 0,
+  ).length;
+  const rate = (part: number) => (sent ? `${Math.round((part / sent) * 100)}%` : "—");
 
   return (
     <>
@@ -44,6 +54,14 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
           {sent} sent · {queued} queued · {skipped} skipped · {failed} failed · {campaign.contacts.length} total
         </span>
       </p>
+      {kind === "invite" ? (
+        <div className="stats campaign-kpis">
+          <Stat value={campaign.contacts.length} label="Targeted" icon="pool" />
+          <Stat value={`${sent}/${campaign.contacts.length}`} label="Invites sent" icon="send" />
+          <Stat value={`${accepted} · ${rate(accepted)}`} label="Accepted" icon="user" />
+          <Stat value={`${replied} · ${rate(replied)}`} label="Replied" icon="inbox" />
+        </div>
+      ) : null}
       {campaign.status === "running" && queued > 0 ? (
         <section className="next-step" style={{ marginBottom: 22 }}>
           <div className="next-step-body">
@@ -61,6 +79,16 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
                 />
                 , with {formatJitterPhrase(settings.minJitterSec, settings.maxJitterSec)}.
               </p>
+            </div>
+          </div>
+        </section>
+      ) : campaign.status === "completed" ? (
+        <section className="next-step" style={{ marginBottom: 22 }}>
+          <div className="next-step-body">
+            <div>
+              <p className="kicker">Done</p>
+              <h2>All {unit}s finished</h2>
+              <p className="muted">Add more people to reopen this campaign and keep sending.</p>
             </div>
           </div>
         </section>

@@ -55,7 +55,11 @@ export function Empty({
 
 export function StatusBadge({ status }: { status: string }) {
   const tone =
-    status === "ready" || status === "sent" || status === "positive" || status === "running"
+    status === "ready" ||
+    status === "sent" ||
+    status === "positive" ||
+    status === "running" ||
+    status === "completed"
       ? "good"
       : status === "failed" ||
           status === "enrich_failed" ||

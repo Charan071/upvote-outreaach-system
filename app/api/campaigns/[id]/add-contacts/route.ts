@@ -12,9 +12,6 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const { id } = await params;
   const campaign = await prisma.campaign.findUnique({ where: { id } });
   if (!campaign) return NextResponse.json({ error: "Campaign not found" }, { status: 404 });
-  if (campaign.status === "completed") {
-    return NextResponse.json({ error: "This campaign is completed." }, { status: 400 });
-  }
 
   const body = await req.json().catch(() => null);
   const ids: string[] = Array.isArray(body?.contactIds) ? body.contactIds.map(String) : [];
@@ -81,7 +78,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     });
   }
 
-  if (campaign.status === "draft") {
+  if (campaign.status === "draft" || campaign.status === "completed") {
     await prisma.campaign.update({ where: { id }, data: { status: "running" } });
   }
 

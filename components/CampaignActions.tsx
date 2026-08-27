@@ -31,13 +31,13 @@ export function CampaignActions({
 
   return (
     <div className="actions">
-      {status !== "running" ? (
-        <button className="btn" disabled={busy} onClick={() => startOrPause(`/api/campaigns/${id}/start`)} type="button">
-          <IconLabel name="play">{busy ? "Starting…" : "Resume"}</IconLabel>
-        </button>
-      ) : (
+      {status === "running" ? (
         <button className="btn secondary" disabled={busy} onClick={() => startOrPause(`/api/campaigns/${id}/pause`)} type="button">
           <IconLabel name="pause">Pause</IconLabel>
+        </button>
+      ) : status === "completed" ? null : (
+        <button className="btn" disabled={busy} onClick={() => startOrPause(`/api/campaigns/${id}/start`)} type="button">
+          <IconLabel name="play">{busy ? "Starting…" : "Resume"}</IconLabel>
         </button>
       )}
       {msg ? <p className="muted">{msg}</p> : null}

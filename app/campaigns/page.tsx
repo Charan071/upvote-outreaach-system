@@ -4,10 +4,12 @@ import { IconLabel } from "@/components/icons";
 import { Empty, PageHeader, StatusBadge } from "@/components/ui";
 import { campaignKindLabel } from "@/lib/status";
 import { LocalTime } from "@/components/LocalTime";
+import { completeFinishedCampaigns } from "@/lib/queue";
 
 export const dynamic = "force-dynamic";
 
 export default async function CampaignsPage() {
+  await completeFinishedCampaigns();
   const campaigns = await prisma.campaign.findMany({
     orderBy: { createdAt: "desc" },
     include: {

@@ -224,6 +224,41 @@ export function clearSentInvitationCache() {
   sentInvitationCache = null;
 }
 
+export type LinkedInRelation = {
+  providerId: string;
+  publicIdentifier: string;
+};
+
+/**
+ * First-degree connections. Used to reconcile accepted invites — the
+ * new_relation webhook is best-effort and silently misses accepts.
+ */
+export async function listRelations(opts?: { maxPages?: number }): Promise<LinkedInRelation[]> {
+  const { accountId } = config();
+  const out: LinkedInRelation[] = [];
+  let cursor: string | undefined;
+  const maxPages = Math.max(1, opts?.maxPages ?? 10);
+
+  for (let page = 0; page < maxPages; page += 1) {
+    const params = new URLSearchParams({ account_id: accountId, limit: "100" });
+    if (cursor) params.set("cursor", cursor);
+    const data = (await unipileFetch(`/api/v1/users/relations?${params}`)) as {
+      items?: Array<{ provider_id?: string; public_identifier?: string }>;
+      cursor?: string | null;
+    };
+    for (const item of data.items || []) {
+      out.push({
+        providerId: String(item.provider_id || ""),
+        publicIdentifier: normalizePublicId(item.public_identifier),
+      });
+    }
+    cursor = data.cursor || undefined;
+    if (!cursor) break;
+  }
+
+  return out;
+}
+
 export async function getLinkedInProfile(slug: string): Promise<{
   providerId: string;
   publicIdentifier: string;

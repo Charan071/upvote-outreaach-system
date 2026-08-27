@@ -23,6 +23,19 @@ function statusFrom(body: Record<string, unknown>) {
   return String(nested?.message || nested?.status || body.message || body.status || "").trim();
 }
 
+/**
+ * Unipile does not send an `event` field. Messaging payloads carry `event_type`;
+ * relation payloads carry no event at all, so fall back to the payload shape.
+ */
+function resolveEvent(body: Record<string, unknown>) {
+  const explicit = String(body.event || body.type || body.event_type || "").trim().toLowerCase();
+  if (explicit) return explicit;
+  if (body.AccountStatus) return "account_status";
+  if (body.message_id || body.message) return "message_received";
+  if (body.user_provider_id || body.user_public_identifier) return "new_relation";
+  return "";
+}
+
 export async function POST(req: Request) {
   if (!headerOk(req)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -31,7 +44,7 @@ export async function POST(req: Request) {
   const body = (await req.json().catch(() => null)) as Record<string, unknown> | null;
   if (!body) return NextResponse.json({ ok: true });
 
-  const event = String(body.event || body.type || "");
+  const event = resolveEvent(body);
   const accountId = accountIdFrom(body);
 
   if (body.AccountStatus || /account.?status/i.test(event)) {
@@ -57,7 +70,8 @@ export async function POST(req: Request) {
       },
     });
     if (contact) {
-      await markConnectedAndSkipInvites(contact.id);
+      const stamp = new Date(String(body.timestamp || ""));
+      await markConnectedAndSkipInvites(contact.id, Number.isNaN(stamp.getTime()) ? new Date() : stamp);
     }
     return NextResponse.json({ ok: true, event, matched: Boolean(contact) });
   }
