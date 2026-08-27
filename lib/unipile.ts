@@ -230,8 +230,12 @@ export type LinkedInRelation = {
 };
 
 /**
- * First-degree connections. Used to reconcile accepted invites — the
- * new_relation webhook is best-effort and silently misses accepts.
+ * First-degree connections, newest first. Reconciles accepted invites the
+ * new_relation webhook misses.
+ *
+ * Unipile flags frequent or deep polling of this endpoint as automation, so
+ * routine runs should take page 1 only. Deeper sweeps are for initial sync.
+ * https://developer.unipile.com/docs/provider-limits-and-restrictions
  */
 export async function listRelations(opts?: { maxPages?: number }): Promise<LinkedInRelation[]> {
   const { accountId } = config();

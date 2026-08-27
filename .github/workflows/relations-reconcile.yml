@@ -1,0 +1,34 @@
+name: Relations reconcile
+
+# Fallback for accepted invites the new_relation webhook drops.
+#
+# Unipile warns that polling relations hourly or at fixed times is easily
+# flagged as automation, and asks for the first page only, a few times a day,
+# at randomly spaced intervals:
+# https://developer.unipile.com/docs/provider-limits-and-restrictions
+#
+# So: three irregular slots per weekday, each offset by a random wait, one page.
+on:
+  schedule:
+    - cron: "23 5 * * 1-5"
+    - cron: "47 9 * * 1-5"
+    - cron: "11 13 * * 1-5"
+  workflow_dispatch:
+
+jobs:
+  reconcile:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Random offset
+        if: github.event_name == 'schedule'
+        run: sleep $(( RANDOM % 2400 ))
+
+      - name: Sync accepted connections
+        env:
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          curl -fsS -X POST \
+            -H "Authorization: Bearer ${CRON_SECRET}" \
+            -H "Content-Type: application/json" \
+            --max-time 110 \
+            "https://lunchlist.up.railway.app/api/relations/sync?pages=1"

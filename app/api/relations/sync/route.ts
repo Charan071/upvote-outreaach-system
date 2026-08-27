@@ -16,10 +16,11 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "unauthorized" }, { status: 401 });
   }
   try {
+    // First page only by default — Unipile flags deep, frequent relation polling.
     const url = new URL(req.url);
     const pages = Number(url.searchParams.get("pages"));
     const result = await syncAcceptedRelations({
-      maxPages: Number.isFinite(pages) && pages > 0 ? pages : undefined,
+      maxPages: Number.isFinite(pages) && pages > 0 ? pages : 1,
     });
     return NextResponse.json(result);
   } catch (error) {
