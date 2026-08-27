@@ -1,0 +1,27 @@
+{
+  "days": ["2026-08-24", "2026-08-25"],
+  "filter": "all",
+  "source": "producthunt-all-backfill",
+  "note": "Backfill of days originally scraped with the Featured filter only.",
+  "rows": [
+    { "linkedinUrl": "https://www.linkedin.com/in/dariush-salami", "productName": "SensWear", "productUrl": "https://www.producthunt.com/products/senswear" },
+    { "linkedinUrl": "https://www.linkedin.com/in/ruohua", "productName": "Wajo", "productUrl": "https://www.producthunt.com/products/wajo" },
+    { "linkedinUrl": "https://www.linkedin.com/in/gal-zahavi", "productName": "Wajo", "productUrl": "https://www.producthunt.com/products/wajo" },
+    { "linkedinUrl": "https://www.linkedin.com/in/brian-h-attarbashi", "productName": "AI Ark", "productUrl": "https://www.producthunt.com/products/ai-ark" },
+    { "linkedinUrl": "https://www.linkedin.com/in/hsk", "productName": "AI Ark", "productUrl": "https://www.producthunt.com/products/ai-ark" },
+    { "linkedinUrl": "https://www.linkedin.com/in/tayyab-sqa-engineer", "productName": "StartupFlow AI", "productUrl": "https://www.producthunt.com/products/startupflow-ai" },
+    { "linkedinUrl": "https://www.linkedin.com/in/dhiren-mhatre", "productName": "Codity", "productUrl": "https://www.producthunt.com/products/codity" },
+    { "linkedinUrl": "https://www.linkedin.com/in/utkarsh-khanna-5949911b4", "productName": "Codity", "productUrl": "https://www.producthunt.com/products/codity" },
+    { "linkedinUrl": "https://www.linkedin.com/in/shree-iyengar", "productName": "Codity", "productUrl": "https://www.producthunt.com/products/codity" },
+    { "linkedinUrl": "https://www.linkedin.com/in/diego-vidal", "productName": "PaymentKit", "productUrl": "https://www.producthunt.com/products/paymentkit" },
+    { "linkedinUrl": "https://www.linkedin.com/in/sarthak-agg", "productName": "Decawork", "productUrl": "https://www.producthunt.com/products/decawork" },
+    { "linkedinUrl": "https://www.linkedin.com/in/ziyan-li-0b3083183", "productName": "Offloop", "productUrl": "https://www.producthunt.com/products/offloop" },
+    { "linkedinUrl": "https://www.linkedin.com/in/yum-gong-608921183", "productName": "Offloop", "productUrl": "https://www.producthunt.com/products/offloop" },
+    { "linkedinUrl": "https://www.linkedin.com/in/jirka-bachel", "productName": "Navigara", "productUrl": "https://www.producthunt.com/products/navigara" },
+    { "linkedinUrl": "https://www.linkedin.com/in/logankilpatrick", "productName": "Antigravity Remote Control", "productUrl": "https://www.producthunt.com/products/google-antigravity" },
+    { "linkedinUrl": "https://www.linkedin.com/in/santosharron", "productName": "Dropstone", "productUrl": "https://www.producthunt.com/products/dropstone-2" },
+    { "linkedinUrl": "https://www.linkedin.com/in/jayson-shin", "productName": "Destiny Rings", "productUrl": "https://www.producthunt.com/products/destiny-rings" },
+    { "linkedinUrl": "https://www.linkedin.com/in/mattsandy", "productName": "Wavepocket", "productUrl": "https://www.producthunt.com/products/wavepocket-free-ios-app" },
+    { "linkedinUrl": "https://www.linkedin.com/in/martial-foe-946041378", "productName": "IFAH", "productUrl": "https://www.producthunt.com/products/ifah-a-new-experience-of-sound" }
+  ]
+}

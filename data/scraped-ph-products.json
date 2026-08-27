@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T07:55:00.000Z",
+  "updatedAt": "2026-08-27T11:20:00.000Z",
   "note": "Product Hunt product slugs already browser-scraped for makers → LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
   "products": [
     {
@@ -544,6 +544,190 @@
       "productUrl": "https://www.producthunt.com/products/tablekard",
       "day": "2026-08-27",
       "note": "All filter 27/08"
+    },
+    {
+      "slug": "jotform",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/jotform",
+      "day": "2026-08-25",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "senswear",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/senswear",
+      "day": "2026-08-25",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "wajo",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 2,
+      "productUrl": "https://www.producthunt.com/products/wajo",
+      "day": "2026-08-25",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "ai-ark",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 2,
+      "productUrl": "https://www.producthunt.com/products/ai-ark",
+      "day": "2026-08-25",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "startupflow-ai",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/startupflow-ai",
+      "day": "2026-08-25",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "marble-7",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/marble-7",
+      "day": "2026-08-25",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "codity",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 3,
+      "productUrl": "https://www.producthunt.com/products/codity",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "paymentkit",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/paymentkit",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "decawork",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/decawork",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "offloop",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 2,
+      "productUrl": "https://www.producthunt.com/products/offloop",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "navigara",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/navigara",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "worldmap-lol",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/worldmap-lol",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "google-antigravity",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/google-antigravity",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "localdock",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/localdock",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "dropstone-2",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/dropstone-2",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "phoenix-10",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/phoenix-10",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "lucid-train",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/lucid-train",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "bumply",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/bumply",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "trama-mac-automation-in-plain-language",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/trama-mac-automation-in-plain-language",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "destiny-rings",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/destiny-rings",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "cortex-by-skynetlab",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/cortex-by-skynetlab",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "wavepocket-free-ios-app",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/wavepocket-free-ios-app",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
+    },
+    {
+      "slug": "ifah-a-new-experience-of-sound",
+      "scrapedAt": "2026-08-27T11:20:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/ifah-a-new-experience-of-sound",
+      "day": "2026-08-24",
+      "note": "All filter backfill"
     }
   ]
 }
