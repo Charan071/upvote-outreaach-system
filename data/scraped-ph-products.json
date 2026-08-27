@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-27T11:20:00.000Z",
+  "updatedAt": "2026-08-27T11:35:00.000Z",
   "note": "Product Hunt product slugs already browser-scraped for makers → LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
   "products": [
     {
@@ -728,6 +728,30 @@
       "productUrl": "https://www.producthunt.com/products/ifah-a-new-experience-of-sound",
       "day": "2026-08-24",
       "note": "All filter backfill"
+    },
+    {
+      "slug": "decai",
+      "scrapedAt": "2026-08-27T11:35:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/decai",
+      "day": "2026-08-27",
+      "note": "All filter, late-day launch"
+    },
+    {
+      "slug": "reachfast",
+      "scrapedAt": "2026-08-27T11:35:00.000Z",
+      "linkedinFound": 1,
+      "productUrl": "https://www.producthunt.com/products/reachfast",
+      "day": "2026-08-27",
+      "note": "All filter, late-day launch"
+    },
+    {
+      "slug": "tokengod",
+      "scrapedAt": "2026-08-27T11:35:00.000Z",
+      "linkedinFound": 0,
+      "productUrl": "https://www.producthunt.com/products/tokengod",
+      "day": "2026-08-27",
+      "note": "All filter, late-day launch"
     }
   ]
 }
