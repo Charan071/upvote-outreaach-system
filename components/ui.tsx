@@ -59,7 +59,8 @@ export function StatusBadge({ status }: { status: string }) {
     status === "sent" ||
     status === "positive" ||
     status === "running" ||
-    status === "completed"
+    status === "completed" ||
+    status === "replied"
       ? "good"
       : status === "failed" ||
           status === "enrich_failed" ||

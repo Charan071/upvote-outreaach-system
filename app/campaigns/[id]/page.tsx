@@ -19,7 +19,13 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
     where: { id },
     include: {
       contacts: {
-        include: { contact: { include: { messages: { where: { direction: "in" }, take: 1 } } } },
+        include: {
+          contact: {
+            include: {
+              messages: { where: { direction: "in" }, orderBy: { receivedAt: "asc" }, take: 1 },
+            },
+          },
+        },
         orderBy: { runAfter: "asc" },
       },
     },
@@ -125,8 +131,16 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
           </thead>
           <tbody>
             {campaign.contacts.map((row) => {
+              // sendStatus only records our side of the send. Once they accept or
+              // reply, show how far down the funnel they actually are.
+              const replied = row.sendStatus === "sent" && row.contact.messages.length > 0;
+              const status = replied ? "replied" : row.acceptedAt ? "connected" : row.sendStatus;
               const when =
-                row.sendStatus === "sent" && row.sentAt ? (
+                row.acceptedAt && !replied ? (
+                  <LocalTime at={row.acceptedAt} mode="datetime" />
+                ) : replied ? (
+                  <LocalTime at={row.contact.messages[0].receivedAt} mode="datetime" />
+                ) : row.sendStatus === "sent" && row.sentAt ? (
                   <LocalTime at={row.sentAt} mode="datetime" />
                 ) : row.sendStatus === "queued" || row.sendStatus === "sending" ? (
                   <LocalTime at={row.runAfter} mode="datetime" />
@@ -143,7 +157,7 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
                     </Link>
                   </td>
                   <td className="campaign-status-cell">
-                    <StatusBadge status={row.sendStatus} />
+                    <StatusBadge status={status} />
                     {shortError ? (
                       <p className="campaign-row-error" title={row.error || shortError}>
                         {shortError}

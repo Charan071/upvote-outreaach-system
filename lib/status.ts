@@ -19,6 +19,7 @@ const LABELS: Record<string, string> = {
   invited: "Invited",
   connected: "Connected",
   messaged: "Messaged",
+  replied: "Replied",
   sent: "Sent",
   skipped: "Skipped",
   none: "—",
