@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-28T10:58:00.000Z",
+  "updatedAt": "2026-08-28T13:40:00.000Z",
   "note": "Product Hunt product slugs already browser-scraped for makers \u2192 LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
   "products": [
     {
@@ -837,6 +837,316 @@
       "slug": "fide-island",
       "scrapedAt": "2026-08-28T10:58:00.000Z",
       "linkedinFound": 1
+    },
+    {
+      "slug": "convincer",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "ai-pet-portrait-generator",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "bone-iq",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "friday-ai-4",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "festivalops",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "platyps",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "king-of-the-pets",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "earniq",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "opsbrain",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "evidoc",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "frameup",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "habitluma",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "context-dev",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "voider",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "screenpipe",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 3
+    },
+    {
+      "slug": "opentag",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "crowdvolt",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "aureacam-learn-photo-composition",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "denet-storage-desktop",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "sitely-ipad-ai-visual-website-builder",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "packdex",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "muze-7",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "stackly",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "ghostprompter",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "swolemates",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "hi-talents-2",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "opentable-2",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "intriq-remember-people",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "trndinn",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "promo-6",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "portalscape",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "asograde",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "clawrank-lol",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "sunday-planning",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "truelist-2",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "staythere",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "morse-code-audio",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "nepal-hackathon",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 5
+    },
+    {
+      "slug": "brand-my-jersey",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "endless-bird-jigsaw-puzzle",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "no-rush",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "fixthis-lol",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "pitchcalc",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "clicker-tv-remote",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "answer-engine-optimisation-aeo-scanner",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "anyonecanbuy-com",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "assetsline",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "ultiwrite",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "counsel-2",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "agents-by-myinfluenceai",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "reelnox-studio",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "livinpixel",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "uidrop",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "spinoza",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "pikwisely-know-before-you-sell",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "manualmode",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "tanaffas",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "simzy-2",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "like-a-book",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "shortsmark",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "justbidder",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "askmycity",
+      "scrapedAt": "2026-08-28T13:40:00.000Z",
+      "linkedinFound": 2
     }
   ]
 }
