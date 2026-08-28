@@ -1,6 +1,6 @@
 {
-  "updatedAt": "2026-08-27T11:35:00.000Z",
-  "note": "Product Hunt product slugs already browser-scraped for makers → LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
+  "updatedAt": "2026-08-28T10:58:00.000Z",
+  "note": "Product Hunt product slugs already browser-scraped for makers \u2192 LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
   "products": [
     {
       "slug": "akta-pro",
@@ -752,6 +752,91 @@
       "productUrl": "https://www.producthunt.com/products/tokengod",
       "day": "2026-08-27",
       "note": "All filter, late-day launch"
+    },
+    {
+      "slug": "pageindexai",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "caddi-3",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "marketing-lol",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "super-intern-4",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "gemini-omni-1-1-flash",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "spline",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "extract-by-firecrawl",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "hugging-face",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "almanac-5",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "glisio",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "google-labs",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "ctrl-micro",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "aramb",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "revalvo",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "snakerank",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "notchdrop",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "fide-island",
+      "scrapedAt": "2026-08-28T10:58:00.000Z",
+      "linkedinFound": 1
     }
   ]
 }
