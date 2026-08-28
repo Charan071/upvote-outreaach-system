@@ -41,7 +41,14 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
   const unit = kind === "message" ? "message" : "invite";
   const nextQueued = queuedRows[0];
 
-  const accepted = campaign.contacts.filter((c) => c.acceptedAt).length;
+  // The campaign row is the precise record, but fall back to the contact's own
+  // state so an unstamped row still reports an accept we know happened.
+  const hasAccepted = (c: (typeof campaign.contacts)[number]) =>
+    Boolean(c.acceptedAt) ||
+    (c.sendStatus === "sent" &&
+      (c.contact.outreachStatus === "connected" || c.contact.outreachStatus === "messaged"));
+
+  const accepted = campaign.contacts.filter(hasAccepted).length;
   const replied = campaign.contacts.filter(
     (c) => c.sendStatus === "sent" && c.contact.messages.length > 0,
   ).length;
@@ -134,10 +141,12 @@ export default async function CampaignDetailPage({ params }: { params: Promise<{
               // sendStatus only records our side of the send. Once they accept or
               // reply, show how far down the funnel they actually are.
               const replied = row.sendStatus === "sent" && row.contact.messages.length > 0;
-              const status = replied ? "replied" : row.acceptedAt ? "connected" : row.sendStatus;
+              const connected = hasAccepted(row);
+              const acceptedAt = row.acceptedAt ?? (connected ? row.contact.acceptedAt : null);
+              const status = replied ? "replied" : connected ? "connected" : row.sendStatus;
               const when =
-                row.acceptedAt && !replied ? (
-                  <LocalTime at={row.acceptedAt} mode="datetime" />
+                acceptedAt && !replied ? (
+                  <LocalTime at={acceptedAt} mode="datetime" />
                 ) : replied ? (
                   <LocalTime at={row.contact.messages[0].receivedAt} mode="datetime" />
                 ) : row.sendStatus === "sent" && row.sentAt ? (

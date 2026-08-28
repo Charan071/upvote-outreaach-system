@@ -109,7 +109,19 @@ export async function syncAcceptedRelations(opts?: { maxPages?: number }) {
   const byProviderId = new Set(relations.map((r) => r.providerId).filter(Boolean));
 
   const pending = await prisma.contact.findMany({
-    where: { OR: [{ outreachStatus: { not: "connected" } }, { acceptedAt: null }] },
+    where: {
+      OR: [
+        { outreachStatus: { not: "connected" } },
+        { acceptedAt: null },
+        // A contact stamped without its campaign row stamped would otherwise be
+        // excluded forever, leaving the campaign unable to show the accept.
+        {
+          campaignContacts: {
+            some: { sendStatus: "sent", acceptedAt: null, campaign: { kind: "invite" } },
+          },
+        },
+      ],
+    },
     select: { id: true, linkedinSlug: true, unipileProviderId: true, outreachStatus: true },
   });
 
@@ -123,7 +135,16 @@ export async function syncAcceptedRelations(opts?: { maxPages?: number }) {
     accepted.push(contact.linkedinSlug);
   }
 
-  return { relations: relations.length, checked: pending.length, accepted };
+  const unstamped = await prisma.campaignContact.count({
+    where: {
+      sendStatus: "sent",
+      acceptedAt: null,
+      campaign: { kind: "invite" },
+      contact: { outreachStatus: "connected" },
+    },
+  });
+
+  return { relations: relations.length, checked: pending.length, accepted, unstamped };
 }
 
 export const ALREADY_INVITED_ERROR = "Invite already pending";
