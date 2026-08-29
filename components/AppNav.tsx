@@ -110,6 +110,7 @@ export function AppNav() {
         type="button"
         className="theme-toggle"
         aria-label={theme === "dark" ? "Switch to light theme" : "Switch to dark theme"}
+        title={theme === "dark" ? "Light" : "Dark"}
         onClick={toggleTheme}
       >
         <Icon name={theme === "dark" ? "sun" : "moon"} size={18} />
