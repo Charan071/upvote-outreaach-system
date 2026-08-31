@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-08-28T13:40:00.000Z",
+  "updatedAt": "2026-08-31T09:00:00.000Z",
   "note": "Product Hunt product slugs already browser-scraped for makers \u2192 LinkedIn. Skip these on the next scrape. Add a row after each successful product visit.",
   "products": [
     {
@@ -1147,6 +1147,256 @@
       "slug": "askmycity",
       "scrapedAt": "2026-08-28T13:40:00.000Z",
       "linkedinFound": 2
+    },
+    {
+      "slug": "1752vc-pitch-deck-analysis",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "hunyuan-a13b",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "cohere-2",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "seendiff",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "neo",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "publicdesktop-lol",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "cursor-craft",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "god-s-eye-view",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "mossy-2",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "wit-will-it-travel",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 3
+    },
+    {
+      "slug": "rawtoheic",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "staats-3",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "einfall-a-place-for-fugitive-thoughts",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "tiles-5",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "lubb-heartbeat-for-sleep",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "any-command-remote-control-for-pc",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "democruit",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "tctgame-social-habit-tracker",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "mole-3",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "thrivestack-citedby",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "pearl-club",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 3
+    },
+    {
+      "slug": "mugiwara-security",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "aquarise-app",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 3
+    },
+    {
+      "slug": "nirnay",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 4
+    },
+    {
+      "slug": "reroute-circular-intelligence",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "studyloop",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 4
+    },
+    {
+      "slug": "saylo-3",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 3
+    },
+    {
+      "slug": "lumora-world",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "plateguard-ai",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 3
+    },
+    {
+      "slug": "roamie-2",
+      "scrapedAt": "2026-08-29T00:00:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "topview-ai",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "hyperfocus-2",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "olostep",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "prequel-2",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "murfy",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "referent",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "ravioli-2",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "rip-my-build",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "ulpaso",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "superagent-a-home-for-your-ai-agents",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "maritime",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "sayscroll-ai-teleprompter",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "omlx",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "edge-drop",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "skud-drag-send-track-in-seconds",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "caplio",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "softorino",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 2
+    },
+    {
+      "slug": "cord-4",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 1
+    },
+    {
+      "slug": "storeline",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 0
+    },
+    {
+      "slug": "parcourse",
+      "scrapedAt": "2026-08-30T00:00:00.000Z",
+      "linkedinFound": 1
     }
   ]
 }

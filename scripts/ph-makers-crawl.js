@@ -4,7 +4,7 @@
 // Edit SLUGS per batch to keep a single run well under the tool timeout.
 
 async (page) => {
-  const SLUGS = ["convincer", "ai-pet-portrait-generator", "bone-iq", "friday-ai-4", "festivalops", "platyps", "king-of-the-pets", "earniq", "opsbrain", "evidoc", "frameup", "habitluma", "arkswift"];
+  const SLUGS = ["maritime", "sayscroll-ai-teleprompter", "omlx", "edge-drop", "skud-drag-send-track-in-seconds", "caplio", "softorino", "cord-4", "storeline", "parcourse"];
   const results = [];
 
   for (const slug of SLUGS) {
