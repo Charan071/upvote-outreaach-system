@@ -9,20 +9,14 @@ name: Relations reconcile
 #
 # So: three irregular slots per weekday, each offset by a random wait, one page.
 on:
-  schedule:
-    - cron: "23 5 * * 1-5"
-    - cron: "47 9 * * 1-5"
-    - cron: "11 13 * * 1-5"
+  # Disabled 2026-09-05: was firing 3x/weekday and failing repeatedly.
+  # Trigger manually if ever needed.
   workflow_dispatch:
 
 jobs:
   reconcile:
     runs-on: ubuntu-latest
     steps:
-      - name: Random offset
-        if: github.event_name == 'schedule'
-        run: sleep $(( RANDOM % 2400 ))
-
       - name: Sync accepted connections
         env:
           CRON_SECRET: ${{ secrets.CRON_SECRET }}
